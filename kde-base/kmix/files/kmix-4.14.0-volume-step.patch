@@ -1,0 +1,14 @@
+diff -urNp kmix.orig/core/volume.cpp kmix/core/volume.cpp
+--- kmix.orig/core/volume.cpp	2013-08-10 14:00:06.000000000 +0200
++++ kmix/core/volume.cpp	2013-08-10 14:03:21.000000000 +0200
+@@ -26,8 +26,8 @@
+ 
+ #include <kdebug.h>
+ 
+-float Volume::VOLUME_STEP_DIVISOR = 20;
+-float Volume::VOLUME_PAGESTEP_DIVISOR = 10;
++float Volume::VOLUME_STEP_DIVISOR = 100;
++float Volume::VOLUME_PAGESTEP_DIVISOR = 100;
+ 
+ 
+ int Volume::_channelMaskEnum[9] =

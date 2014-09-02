@@ -1,0 +1,12 @@
+diff -urpN r8101-1.021.00.orig/src/r8101_n.c r8101-1.021.00/src/r8101_n.c
+--- r8101-1.021.00.orig/src/r8101_n.c	2011-10-28 09:05:27.000000000 +0200
++++ r8101-1.021.00/src/r8101_n.c	2012-01-11 00:05:08.000000000 +0100
+@@ -6923,7 +6923,7 @@ rtl8101_xmit_frags(struct rtl8101_privat
+ 
+ 		txd = tp->TxDescArray + entry;
+ 		len = frag->size;
+-		addr = ((void *) page_address(frag->page)) + frag->page_offset;
++		addr = ((void *) page_address(frag->page.p)) + frag->page_offset;
+ 		mapping = pci_map_single(tp->pci_dev, addr, len, PCI_DMA_TODEVICE);
+ 
+ 		/* anti gcc 2.95.3 bugware (sic) */

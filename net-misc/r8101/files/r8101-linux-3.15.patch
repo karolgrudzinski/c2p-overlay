@@ -1,0 +1,11 @@
+--- r8169-6.018.00.old/src/r8101_n.c        2014-06-13 11:27:54.681900589 -0400
++++ r8169-6.018.00/src/r8101_n.c    2014-06-13 11:28:05.610763959 -0400
+@@ -3394,7 +3394,7 @@
+ {
+     struct rtl8169_private *tp = netdev_priv(dev);
+
+-    PREPARE_DELAYED_WORK(&tp->task, task);
++    INIT_DELAYED_WORK(&tp->task, task);
+     schedule_delayed_work(&tp->task, 4);
+ }
+ #endif
