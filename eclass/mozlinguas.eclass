@@ -66,7 +66,7 @@ esac
 : ${MOZ_LANGPACK_SUFFIX:=".xpi"}
 
 # Add linguas_* to IUSE according to available language packs
-# No language packs for alphas and betas
+# No language packs for alphas
 if ! [[ ${PV} =~ alpha ]] || { [[ ${PN} == seamonkey ]] && ! [[ ${PV} =~ alpha ]] ; } ; then
 	for x in "${MOZ_LANGS[@]}" ; do
 		# en and en_US are handled internally
