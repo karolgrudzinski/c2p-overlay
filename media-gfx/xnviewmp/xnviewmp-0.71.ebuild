@@ -8,8 +8,8 @@ inherit eutils
 
 DESCRIPTION="XnView MP image viewer/converter"
 HOMEPAGE="http://www.xnview.com/"
-SRC_URI="x86? ( http://download.xnview.com/XnViewMP-068-linux.tgz )
-       amd64? ( http://download.xnview.com/XnViewMP-068-linux-x64.tgz )"
+SRC_URI="x86? ( http://download.xnview.com/XnViewMP-linux.tgz )
+       amd64? ( http://download.xnview.com/XnViewMP-linux-x64.tgz )"
 
 SLOT="0"
 LICENSE="free-noncomm as-is"
