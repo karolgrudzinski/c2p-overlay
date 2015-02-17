@@ -1,9 +1,9 @@
 <repositories encoding="unicode" version="1.1">
-  <repo priority="50" quality="experimental">
+  <repo priority="50" quality="experimental" status="unofficial">
     <name>c2p-overlay</name>
     <description>Personal overlay of Karol Grudziński</description>
     <homepage>https://github.com/karolgrudzinski/c2p-overlay</homepage>
-    <owner>
+    <owner type="person">
       <email>krlgrudzinski+gentoo@gmail.com</email>
       <name>Karol Grudziński</name>
     </owner>
