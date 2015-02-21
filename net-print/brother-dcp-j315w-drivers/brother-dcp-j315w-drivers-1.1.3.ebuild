@@ -3,7 +3,7 @@ EAPI=4
 inherit rpm multilib
 
 DESCRIPTION="Brother DCP-J315W LPR+cupswrapper drivers"
-HOMEPAGE="http://welcome.solutions.brother.com/bsc/public_s/id/linux/en/download_prn.html#DCP-J315W"
+HOMEPAGE="http://support.brother.com/g/b/downloadlist.aspx?c=pl&lang=pl&prod=dcpj315w_eu_as&os=127&flang=English"
 SRC_URI="http://download.brother.com/welcome/dlf005590/dcpj315wlpr-1.1.3-1.i386.rpm
          http://download.brother.com/welcome/dlf005592/dcpj315wcupswrapper-1.1.3-1.i386.rpm"
 
