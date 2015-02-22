@@ -31,5 +31,9 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/fritzing-app-master"
 
 src_configure() {
-	eqmake5 PREFIX=${ED}/usr DEFINES=QUAZIP_INSTALLED phoenix.pro
+	eqmake5 DEFINES=QUAZIP_INSTALLED phoenix.pro
+}
+
+src_install() {
+    einstall INSTALL_ROOT=${ED}
 }
