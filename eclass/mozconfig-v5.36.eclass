@@ -1,6 +1,6 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/eclass/mozconfig-v5.34.eclass,v 1.3 2014/12/04 01:17:15 axs Exp $
+# $Header: /var/cvsroot/gentoo-x86/eclass/mozconfig-v5.36.eclass,v 1.1 2015/02/26 20:41:10 axs Exp $
 #
 # @ECLASS: mozconfig-v5.33.eclass
 # @MAINTAINER:
@@ -56,10 +56,10 @@ RDEPEND=">=app-text/hunspell-1.2
 	dev-libs/expat
 	>=dev-libs/libevent-1.4.7
 	>=x11-libs/cairo-1.10[X]
-	>=x11-libs/gtk+-2.14:2
+	>=x11-libs/gtk+-2.18:2
 	x11-libs/gdk-pixbuf
 	>=x11-libs/pango-1.22.0
-	>=media-libs/libpng-1.6.13:0=[apng]
+	>=media-libs/libpng-1.6.14:0=[apng]
 	>=media-libs/mesa-10.2:*
 	media-libs/fontconfig
 	>=media-libs/freetype-2.4.10
@@ -71,7 +71,7 @@ RDEPEND=">=app-text/hunspell-1.2
 	startup-notification? ( >=x11-libs/startup-notification-0.8 )
 	>=dev-libs/glib-2.26:2
 	>=sys-libs/zlib-1.2.3
-	virtual/libffi
+	>=virtual/libffi-3.0.10
 	gstreamer? (
 		>=media-libs/gstreamer-1.2.3:1.0
 		>=media-libs/gst-plugins-base-1.2.3:1.0
@@ -88,7 +88,7 @@ RDEPEND=">=app-text/hunspell-1.2
 	system-cairo? ( >=x11-libs/cairo-1.12[X] >=x11-libs/pixman-0.19.2 )
 	system-icu? ( >=dev-libs/icu-51.1:= )
 	system-jpeg? ( >=media-libs/libjpeg-turbo-1.2.1 )
-	system-sqlite? ( >=dev-db/sqlite-3.8.6:3[secure-delete,debug=] )
+	system-sqlite? ( >=dev-db/sqlite-3.8.7.4:3[secure-delete,debug=] )
 	system-libvpx? ( =media-libs/libvpx-1.3.0*[postproc] )
 "
 
