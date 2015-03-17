@@ -76,7 +76,7 @@ RDEPEND="dev-cpp/cairomm
 	x11-libs/pango
 	x11-libs/startup-notification
 	!app-emulation/vmware-workstation"
-PDEPEND="~app-emulation/vmware-modules-280.${PV_MINOR}
+PDEPEND="~app-emulation/vmware-modules-279.3
 	vmware-tools? ( app-emulation/vmware-tools )"
 
 S=${WORKDIR}
