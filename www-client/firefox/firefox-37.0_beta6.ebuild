@@ -8,11 +8,11 @@ WANT_AUTOCONF="2.1"
 MOZ_ESR=""
 
 # This list can be updated with scripts/get_langs.sh from the mozilla overlay
-MOZ_LANGS=( ach af an ar as ast az be bg bn-BD bn-IN br bs ca cs cy da de dsb
-    el en en-GB en-US en-ZA eo es-AR es-CL es-ES es-MX et eu fa ff fi fr fy-NL
-    ga-IE gd gl gu-IN he hi-IN hr hsb hu hy-AM id is it ja kk km kn ko lij lt
-    lv mai mk ml mr ms nb-NO nl nn-NO or pa-IN pl pt-BR pt-PT rm ro ru si sk
-    sl son sq sr sv-SE ta te th tr uk uz vi xh zh-CN zh-TW )
+MOZ_LANGS=( ach af an ar as ast az be bg bn-BD bn-IN br bs ca cs cy da de dsb 
+    el en en-GB en-US en-ZA eo es-AR es-CL es-ES es-MX et eu fa ff fi fr fy-NL 
+    ga-IE gd gl gu-IN he hi-IN hr hsb hu hy-AM id is it ja kk km kn ko lij lt lv 
+    mai mk ml mr ms nb-NO nl nn-NO or pa-IN pl pt-BR pt-PT rm ro ru si sk sl son 
+    sq sr sv-SE ta te th tr uk uz vi xh zh-CN zh-TW )
 
 # Convert the ebuild version to the upstream mozilla version, used by mozlinguas
 MOZ_PV="${PV/_alpha/a}" # Handle alpha for SRC_URI
