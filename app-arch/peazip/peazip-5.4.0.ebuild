@@ -67,7 +67,7 @@ RDEPEND="qt4? ( ${MY_QT4_RDEPEND} )
             ) )
             ( || (
                 app-emulation/emul-linux-x86-baselibs[development,-abi_x86_32(-)]
-                net-misc/curl
+                net-misc/curl[abi_x86_32(-)]
             ) )            
         )
 		x86? ( dev-libs/atk
