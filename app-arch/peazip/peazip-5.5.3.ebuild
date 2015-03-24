@@ -22,21 +22,54 @@ S="${WORKDIR}"
 
 REQUIRED_USE="^^ ( qt4 gtk )"
 
-MY_GTK_RDEPEND="amd64? ( app-emulation/emul-linux-x86-gtklibs )
+MY_GTK_RDEPEND="amd64? ( 
+                    ( || (
+                        app-emulation/emul-linux-x86-gtklibs[development,-abi_x86_32(-)]
+                        ( 
+                            x11-libs/cairo[abi_x86_32(-)]
+                            x11-libs/gdk-pixbuf:2[abi_x86_32(-)]
+                            x11-libs/gtk+:2[abi_x86_32(-)]
+                            x11-libs/pango[abi_x86_32(-)]
+                        )
+                    ) )
+                )
 				x86? (	x11-libs/cairo
 						x11-libs/gdk-pixbuf:2
 						x11-libs/gtk+:2
 						x11-libs/pango )"
 
-MY_QT4_RDEPEND="amd64? ( app-emulation/emul-linux-x86-qtlibs )
+MY_QT4_RDEPEND="amd64? ( 
+                    ( || (
+                        app-emulation/emul-linux-x86-qtlibs
+                        (
+                            dev-qt/qtcore[abi_x86_32(-)]
+                            dev-qt/qtgui[abi_x86_32(-)]
+                        )
+                    ) )
+                )
 				x86? (	dev-qt/qtcore
 						dev-qt/qtgui )"
 
 RDEPEND="qt4? ( ${MY_QT4_RDEPEND} )
 		gtk? ( ${MY_GTK_RDEPEND} )
 		amd64? (
-			app-emulation/emul-linux-x86-baselibs
-			app-emulation/emul-linux-x86-xlibs )
+            ( || (
+                app-emulation/emul-linux-x86-gtklibs[development,-abi_x86_32(-)]
+                dev-libs/atk[abi_x86_32(-)]
+            ) )
+            ( || (
+                app-emulation/emul-linux-x86-xlibs[development,-abi_x86_32(-)]
+                media-libs/fontconfig[abi_x86_32(-)]
+            ) )
+			( || (
+                app-emulation/emul-linux-x86-xlibs[development,-abi_x86_32(-)]
+                media-libs/freetype[abi_x86_32(-)]
+            ) )
+            ( || (
+                app-emulation/emul-linux-x86-baselibs[development,-abi_x86_32(-)]
+                net-misc/curl
+            ) )            
+        )
 		x86? ( dev-libs/atk
 			media-libs/fontconfig
 			media-libs/freetype
