@@ -14,7 +14,7 @@ start() {
 	@@BINDIR@@/vmware-usbarbitrator 
 	eend $?
 	ebegin Starting VMware services
-	modprobe -a vmmon vmci vsock vmblock vmnet 
+	modprobe -a vmmon vmci vsock vmblock vmnet || modprobe -a vmw_vsock_vmci_transport 
 	eend $?
 	@@BINDIR@@/vmware-networks --start
 	eend $?
@@ -28,6 +28,6 @@ stop() {
 	@@BINDIR@@/vmware-networks --stop 
 	eend $?
 	ebegin Stopping VMware services
-	modprobe -r vsock vmci vmmon vmblock vmnet
+	modprobe -r vmmon vmblock vmnet vmci vsock || modprobe -r vmw_vsock_vmci_transport vmw_vmci vsock
 	eend $?
 }
