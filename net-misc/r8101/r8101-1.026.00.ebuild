@@ -28,7 +28,15 @@ pkg_nofetch() {
     einfo "from ${HOMEPAGE} and place file ${P}.tar.bz2 in ${DISTDIR}"
 }
 
+src_prepare() {
+    epatch "${FILESDIR}/${P}-linux-4-compat.patch"
+}
+
 pkg_setup() {
     linux-mod_pkg_setup
     BUILD_PARAMS="KERNELDIR=${KV_DIR}"
+}
+
+src_install() {
+	linux-mod_src_install
 }
