@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/firefox/firefox-36.0.4.ebuild,v 1.1 2015/03/24 08:53:56 polynomial-c Exp $
+# $Header: $
 
 EAPI="5"
 VIRTUALX_REQUIRED="pgo"
@@ -8,11 +8,11 @@ WANT_AUTOCONF="2.1"
 MOZ_ESR=""
 
 # This list can be updated with scripts/get_langs.sh from the mozilla overlay
-MOZ_LANGS=( ach af an ar as ast az be bg bn-BD bn-IN br bs ca cs cy da de dsb 
-    el en en-GB en-US en-ZA eo es-AR es-CL es-ES es-MX et eu fa ff fi fr fy-NL 
-    ga-IE gd gl gu-IN he hi-IN hr hsb hu hy-AM id is it ja kk km kn ko lij lt lv 
-    mai mk ml mr ms nb-NO nl nn-NO or pa-IN pl pt-BR pt-PT rm ro ru si sk sl son 
-    sq sr sv-SE ta te th tr uk uz vi xh zh-CN zh-TW )
+MOZ_LANGS=( ach af an ar as ast az be bg bn-BD bn-IN br bs ca cs cy da de dsb el 
+en en-GB en-US en-ZA eo es-AR es-CL es-ES es-MX et eu fa ff fi fr fy-NL ga-IE gd 
+gl gu-IN he hi-IN hr hsb hu hy-AM id is it ja kk km kn ko lij lt lv mai mk ml mr 
+ms nb-NO nl nn-NO or pa-IN pl pt-BR pt-PT rm ro ru si sk sl son sq sr sv-SE ta 
+te th tr uk uz vi xh zh-CN zh-TW )
 
 # Convert the ebuild version to the upstream mozilla version, used by mozlinguas
 MOZ_PV="${PV/_alpha/a}" # Handle alpha for SRC_URI
@@ -43,7 +43,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linu
 
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
-IUSE="bindist hardened +minimal pgo selinux +gmp-autoupdate test"
+IUSE="bindist hardened kde +minimal pgo selinux +gmp-autoupdate test"
 RESTRICT="!bindist? ( bindist )"
 
 # More URIs appended below...
@@ -58,6 +58,7 @@ ASM_DEPEND=">=dev-lang/yasm-1.1"
 RDEPEND="
 	>=dev-libs/nss-3.18
 	>=dev-libs/nspr-4.10.8
+	kde? ( kde-misc/kmozillahelper )
 	selinux? ( sec-policy/selinux-mozilla )"
 
 DEPEND="${RDEPEND}
@@ -151,6 +152,29 @@ src_prepare() {
 	if use debug ; then
 		sed -i -e "s:GNOME_DISABLE_CRASH_DIALOG=1:GNOME_DISABLE_CRASH_DIALOG=0:g" \
 			"${S}"/build/unix/run-mozilla.sh || die "sed failed!"
+	fi
+
+	# Enable KDE integration
+	if use kde; then
+		rm -f browser/components/shell/src/nsKDEShellService.cpp \
+			browser/components/shell/src/nsKDEShellService.h \
+			browser/components/shell/src/nsUnixShellService.cpp \
+			browser/components/shell/src/nsUnixShellService.h \
+			browser/base/content/browser-kde.xul || die
+		rm -f toolkit/xre/nsKDEUtils.cpp \
+			toolkit/xre/nsKDEUtils.h \
+			uriloader/exthandler/unix/nsCommonRegistry.cpp \
+			uriloader/exthandler/unix/nsCommonRegistry.h \
+			uriloader/exthandler/unix/nsKDERegistry.cpp \
+			uriloader/exthandler/unix/nsKDERegistry.h \
+			toolkit/content/widgets/dialog-kde.xml \
+			toolkit/content/widgets/preferences-kde.xml || die
+
+		install -m 644 "${FILESDIR}/kde.js" browser/app/profile/kde.js
+
+		# patches taken from http://www.rosenauer.org/hg/mozilla
+		epatch "${FILESDIR}"/${PN}-37.0-mozilla-kde.patch
+		epatch "${FILESDIR}"/${PN}-37.0-kde.patch
 	fi
 
 	# Ensure that our plugins dir is enabled as default
