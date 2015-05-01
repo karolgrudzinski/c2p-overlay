@@ -43,7 +43,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linu
 
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
-IUSE="bindist hardened kde +minimal pgo selinux +gmp-autoupdate test"
+IUSE="bindist hardened +minimal pgo selinux +gmp-autoupdate test"
 RESTRICT="!bindist? ( bindist )"
 
 # More URIs appended below...
@@ -58,7 +58,6 @@ ASM_DEPEND=">=dev-lang/yasm-1.1"
 RDEPEND="
 	>=dev-libs/nss-3.18
 	>=dev-libs/nspr-4.10.8
-	kde? ( kde-misc/kmozillahelper )
 	selinux? ( sec-policy/selinux-mozilla )"
 
 DEPEND="${RDEPEND}
@@ -152,29 +151,6 @@ src_prepare() {
 	if use debug ; then
 		sed -i -e "s:GNOME_DISABLE_CRASH_DIALOG=1:GNOME_DISABLE_CRASH_DIALOG=0:g" \
 			"${S}"/build/unix/run-mozilla.sh || die "sed failed!"
-	fi
-
-	# Enable KDE integration
-	if use kde; then
-		rm -f browser/components/shell/src/nsKDEShellService.cpp \
-			browser/components/shell/src/nsKDEShellService.h \
-			browser/components/shell/src/nsUnixShellService.cpp \
-			browser/components/shell/src/nsUnixShellService.h \
-			browser/base/content/browser-kde.xul || die
-		rm -f toolkit/xre/nsKDEUtils.cpp \
-			toolkit/xre/nsKDEUtils.h \
-			uriloader/exthandler/unix/nsCommonRegistry.cpp \
-			uriloader/exthandler/unix/nsCommonRegistry.h \
-			uriloader/exthandler/unix/nsKDERegistry.cpp \
-			uriloader/exthandler/unix/nsKDERegistry.h \
-			toolkit/content/widgets/dialog-kde.xml \
-			toolkit/content/widgets/preferences-kde.xml || die
-
-		install -m 644 "${FILESDIR}/kde.js" browser/app/profile/kde.js
-
-		# patches taken from http://www.rosenauer.org/hg/mozilla
-		epatch "${FILESDIR}"/${PN}-37.0-mozilla-kde.patch
-		epatch "${FILESDIR}"/${PN}-37.0-kde.patch
 	fi
 
 	# Ensure that our plugins dir is enabled as default
