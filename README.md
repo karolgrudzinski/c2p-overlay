@@ -6,7 +6,7 @@ It includes only ebuilds for software I'm using:
 
 To add this overlay to a Gentoo system, run the following command:
 
-    layman -o https://raw.github.com/karolgrudzinski/c2p-overlay/master/c2p-overlay.xml -f -a c2p-overlay
+    layman -a c2p-overlay
 
 You must have both dev-vcs/git and app-portage/layman installed on your system 
 for this to work.
