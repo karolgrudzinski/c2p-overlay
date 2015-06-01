@@ -1,0 +1,2 @@
+pref("security.ssl3.dhe_rsa_aes_128_sha",      false);
+pref("security.ssl3.dhe_rsa_aes_256_sha",      false);
