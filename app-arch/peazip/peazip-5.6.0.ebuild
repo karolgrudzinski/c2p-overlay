@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,61 +15,36 @@ SRC_URI="qt4? ( mirror://sourceforge/${MY_PN}/${MY_P}.LINUX.Qt.tgz )
 
 LICENSE="LGPL-3 GPL-2 unRAR LGPL-2.1 GPL-3"
 SLOT="0"
-KEYWORDS="-* ~amd64 ~x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="kde gnome qt4 gtk"
 RESTRICT="mirror strip"
 S="${WORKDIR}"
 
 REQUIRED_USE="^^ ( qt4 gtk )"
 
-MY_GTK_RDEPEND="amd64? ( 
-                    ( || (
-                        app-emulation/emul-linux-x86-gtklibs[development,-abi_x86_32(-)]
-                        ( 
-                            x11-libs/cairo[abi_x86_32(-)]
-                            x11-libs/gdk-pixbuf:2[abi_x86_32(-)]
-                            x11-libs/gtk+:2[abi_x86_32(-)]
-                            x11-libs/pango[abi_x86_32(-)]
-                        )
-                    ) )
-                )
+MY_GTK_RDEPEND="amd64? (
+						x11-libs/cairo[abi_x86_32(-)]
+						x11-libs/gdk-pixbuf:2[abi_x86_32(-)]
+						x11-libs/gtk+:2[abi_x86_32(-)]
+						x11-libs/pango[abi_x86_32(-)] )
 				x86? (	x11-libs/cairo
 						x11-libs/gdk-pixbuf:2
 						x11-libs/gtk+:2
 						x11-libs/pango )"
 
-MY_QT4_RDEPEND="amd64? ( 
-                    ( || (
-                        app-emulation/emul-linux-x86-qtlibs
-                        (
-                            dev-qt/qtcore[abi_x86_32(-)]
-                            dev-qt/qtgui[abi_x86_32(-)]
-                        )
-                    ) )
-                )
-				x86? (	dev-qt/qtcore
-						dev-qt/qtgui )"
+MY_QT4_RDEPEND="amd64? (
+						dev-qt/qtcore:4[abi_x86_32(-)]
+						dev-qt/qtgui:4[abi_x86_32(-)] )
+				x86? (	dev-qt/qtcore:4
+						dev-qt/qtgui:4 )"
 
 RDEPEND="qt4? ( ${MY_QT4_RDEPEND} )
 		gtk? ( ${MY_GTK_RDEPEND} )
 		amd64? (
-            ( || (
-                app-emulation/emul-linux-x86-gtklibs[development,-abi_x86_32(-)]
-                dev-libs/atk[abi_x86_32(-)]
-            ) )
-            ( || (
-                app-emulation/emul-linux-x86-xlibs[development,-abi_x86_32(-)]
-                media-libs/fontconfig[abi_x86_32(-)]
-            ) )
-			( || (
-                app-emulation/emul-linux-x86-xlibs[development,-abi_x86_32(-)]
-                media-libs/freetype[abi_x86_32(-)]
-            ) )
-            ( || (
-                app-emulation/emul-linux-x86-baselibs[development,-abi_x86_32(-)]
-                net-misc/curl[abi_x86_32(-)]
-            ) )            
-        )
+			dev-libs/atk[abi_x86_32(-)]
+			media-libs/fontconfig[abi_x86_32(-)]
+			media-libs/freetype[abi_x86_32(-)]
+			net-misc/curl[abi_x86_32(-)]	)
 		x86? ( dev-libs/atk
 			media-libs/fontconfig
 			media-libs/freetype
