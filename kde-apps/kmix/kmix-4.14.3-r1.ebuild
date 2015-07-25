@@ -20,12 +20,13 @@ DEPEND="
 RDEPEND="${DEPEND}"
 
 PATCHES=(
-    "${FILESDIR}/${PN}-4.14.0-volume-step.patch"
+	"${FILESDIR}/${PN}-4.14.3-alsa-optional.patch"
+	"${FILESDIR}/${PN}-4.14.0-volume-step.patch"
 )
 
 src_configure() {
 	local mycmakeargs=(
-		$(cmake-utils_use_with alsa)
+		$(cmake-utils_use_find_package alsa)
 		$(cmake-utils_use_with canberra)
 		$(cmake-utils_use_with pulseaudio PulseAudio)
 	)
