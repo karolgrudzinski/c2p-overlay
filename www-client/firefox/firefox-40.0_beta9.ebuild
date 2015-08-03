@@ -8,6 +8,8 @@ WANT_AUTOCONF="2.1"
 MOZ_ESR=""
 
 # This list can be updated with scripts/get_langs.sh from the mozilla overlay
+# No official support as of fetch time
+# csb
 MOZ_LANGS=( ach af an ar as ast az be bg bn-BD bn-IN br bs ca cs cy da de dsb el 
 en en-GB en-US en-ZA eo es-AR es-CL es-ES es-MX et eu fa ff fi fr fy-NL ga-IE gd 
 gl gu-IN he hi-IN hr hsb hu hy-AM id is it ja kk km kn ko lij lt lv mai mk ml mr 
@@ -25,16 +27,17 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-38.0-patches-0.3"
+PATCH="${PN}-40.0-patches-0.01"
 # Upstream ftp release URI that's used by mozlinguas.eclass
 # We don't use the http mirror because it deletes old tarballs.
 MOZ_FTP_URI="ftp://ftp.mozilla.org/pub/${PN}/releases"
 MOZ_HTTP_URI="http://ftp.mozilla.org/pub/${PN}/releases"
 
+MOZCONFIG_OPTIONAL_GTK3=1
 MOZCONFIG_OPTIONAL_WIFI=1
 MOZCONFIG_OPTIONAL_JIT="enabled"
 
-inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v5.38 multilib pax-utils fdo-mime autotools virtualx mozlinguas
+inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.40 multilib pax-utils fdo-mime autotools virtualx mozlinguas
 
 DESCRIPTION="Firefox Web Browser"
 HOMEPAGE="http://www.mozilla.com/firefox"
@@ -44,7 +47,8 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linu
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
 IUSE="bindist egl hardened +minimal neon pgo selinux +gmp-autoupdate test"
-RESTRICT="!bindist? ( bindist ) nomirror"
+RESTRICT="!bindist? ( bindist )
+	mirror"
 
 # More URIs appended below...
 SRC_URI="${SRC_URI}
@@ -56,7 +60,7 @@ ASM_DEPEND=">=dev-lang/yasm-1.1"
 
 # Mesa 7.10 needed for WebGL + bugfixes
 RDEPEND="
-	>=dev-libs/nss-3.19
+	>=dev-libs/nss-3.19.2
 	>=dev-libs/nspr-4.10.8
 	selinux? ( sec-policy/selinux-mozilla )"
 
@@ -142,7 +146,6 @@ src_prepare() {
 	# Apply our patches
 	EPATCH_SUFFIX="patch" \
 	EPATCH_FORCE="yes" \
-	EPATCH_EXCLUDE="8010_bug114311-freetype26.patch" \
 	epatch "${WORKDIR}/firefox"
 
 	# Allow user to apply any additional patches without modifing ebuild
