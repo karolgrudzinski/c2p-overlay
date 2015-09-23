@@ -46,7 +46,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linu
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
 IUSE="bindist egl hardened +minimal neon pgo selinux +gmp-autoupdate test"
-RESTRICT="!bindist? ( bindist )"
+RESTRICT="!bindist? ( bindist ) mirror"
 
 # More URIs appended below...
 SRC_URI="${SRC_URI}
