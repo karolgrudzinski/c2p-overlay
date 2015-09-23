@@ -1,0 +1,12 @@
+diff -Naur pm-utils-1.4.1.orig/pm/module.d/tuxonice pm-utils-1.4.1/pm/module.d/tuxonice
+--- pm-utils-1.4.1.orig/pm/module.d/tuxonice	2010-07-04 16:50:13.000000000 +0200
++++ pm-utils-1.4.1/pm/module.d/tuxonice	2015-09-23 14:18:52.037010988 +0200
+@@ -29,7 +29,7 @@
+ 	do_hibernate()
+ 	{
+ 	    toi_maybe_chvt
+-	    echo 5 > "${TUXONICE_LOC}/powerdown_method"
++	    echo 4 > "${TUXONICE_LOC}/powerdown_method"
+ 	    echo anything > "${TUXONICE_LOC}/do_hibernate"
+ 	}
+ fi
