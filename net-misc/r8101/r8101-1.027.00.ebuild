@@ -25,7 +25,7 @@ BUILD_TARGETS="modules"
 
 pkg_nofetch() {
     einfo "Please download 'LINUX driver for kernel 3.x and 2.6.x and 2.4.x'"
-    einfo "from ${HOMEPAGE} and place file ${P}.tar.bz2 in ${DISTDIR}"
+    einfo "from ${HOMEPAGE}, change its name from 0002-${P}.tar.bz2 to ${P}.tar.bz2 and place file  in ${DISTDIR}"
 }
 
 src_prepare() {
