@@ -8,8 +8,6 @@ WANT_AUTOCONF="2.1"
 MOZ_ESR=""
 
 # This list can be updated with scripts/get_langs.sh from the mozilla overlay
-# No official support as of fetch time
-# csb
 MOZ_LANGS=( ach af an ar as ast az be bg bn-BD bn-IN br bs ca cs cy da de dsb el
 en en-GB en-US en-ZA eo es-AR es-CL es-ES es-MX et eu fa ff fi fr fy-NL ga-IE gd
 gl gu-IN he hi-IN hr hsb hu hy-AM id is it ja kk km kn ko lij lt lv mai mk ml mr
@@ -28,11 +26,8 @@ fi
 
 # Patch version
 PATCH="${PN}-40.0-patches-0.01"
-# Upstream ftp release URI that's used by mozlinguas.eclass
-# We don't use the http mirror because it deletes old tarballs.
 MOZ_HTTP_URI="http://archive.mozilla.org/pub/${PN}/releases"
 
-MOZCONFIG_OPTIONAL_GTK3=1
 MOZCONFIG_OPTIONAL_WIFI=1
 MOZCONFIG_OPTIONAL_JIT="enabled"
 
@@ -46,13 +41,13 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linu
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
 IUSE="bindist egl hardened +minimal neon pgo selinux +gmp-autoupdate test"
-RESTRICT="!bindist? ( bindist )"
+RESTRICT="!bindist? ( bindist ) mirror"
 
 # More URIs appended below...
 SRC_URI="${SRC_URI}
-	http://dev.gentoo.org/~anarchy/mozilla/patchsets/${PATCH}.tar.xz
-	http://dev.gentoo.org/~axs/mozilla/patchsets/${PATCH}.tar.xz
-	http://dev.gentoo.org/~polynomial-c/mozilla/patchsets/${PATCH}.tar.xz"
+	https://dev.gentoo.org/~anarchy/mozilla/patchsets/${PATCH}.tar.xz
+	https://dev.gentoo.org/~axs/mozilla/patchsets/${PATCH}.tar.xz
+	https://dev.gentoo.org/~polynomial-c/mozilla/patchsets/${PATCH}.tar.xz"
 
 ASM_DEPEND=">=dev-lang/yasm-1.1"
 
@@ -74,10 +69,10 @@ DEPEND="${RDEPEND}
 if [[ ${PV} =~ alpha ]]; then
 	CHANGESET="8a3042764de7"
 	SRC_URI="${SRC_URI}
-		http://dev.gentoo.org/~nirbheek/mozilla/firefox/firefox-${MOZ_PV}_${CHANGESET}.source.tar.xz"
+		https://dev.gentoo.org/~nirbheek/mozilla/firefox/firefox-${MOZ_PV}_${CHANGESET}.source.tar.xz"
 	S="${WORKDIR}/mozilla-aurora-${CHANGESET}"
 elif [[ ${PV} =~ beta ]]; then
-	S="${WORKDIR}/mozilla-beta"
+	S="${WORKDIR}/${MOZ_P}"
 	SRC_URI="${SRC_URI}
 		${MOZ_HTTP_URI}/${MOZ_PV}/source/firefox-${MOZ_PV}.source.tar.xz"
 else
@@ -142,7 +137,10 @@ src_prepare() {
 	# Apply our patches
 	EPATCH_SUFFIX="patch" \
 	EPATCH_FORCE="yes" \
+	EPATCH_EXCLUDE="5002_avoid_spurious_run_items_in_application_handlers.patch" \
 	epatch "${WORKDIR}/firefox"
+	epatch "${FILESDIR}"/${PN}-38-dont-hardcode-libc-soname.patch #557956
+	epatch "${FILESDIR}"/5002_avoid_spurious_run_items_in_application_handlers.patch
 
 	# Allow user to apply any additional patches without modifing ebuild
 	epatch_user
