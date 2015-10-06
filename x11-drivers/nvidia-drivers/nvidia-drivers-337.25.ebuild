@@ -23,7 +23,7 @@ SRC_URI="
 "
 
 LICENSE="GPL-2 NVIDIA-r2"
-SLOT="0"
+SLOT="0/330"
 KEYWORDS="-* amd64 x86 ~amd64-fbsd ~x86-fbsd"
 IUSE="acpi multilib kernel_FreeBSD kernel_linux pax_kernel +tools +X uvm"
 RESTRICT="bindist mirror strip"
@@ -57,13 +57,8 @@ RDEPEND="
 		<x11-base/xorg-server-1.16.99
 		>=x11-libs/libvdpau-0.3-r1
 		multilib? (
-			|| (
-				 (
-					>=x11-libs/libX11-1.6.2[abi_x86_32]
-					>=x11-libs/libXext-1.3.2[abi_x86_32]
-				 )
-				app-emulation/emul-linux-x86-xlibs
-			)
+			>=x11-libs/libX11-1.6.2[abi_x86_32]
+			>=x11-libs/libXext-1.3.2[abi_x86_32]
 		)
 	)
 "
