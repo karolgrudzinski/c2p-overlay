@@ -25,13 +25,14 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-40.0-patches-0.01"
+PATCH="${PN}-42.0-patches-01.1"
 MOZ_HTTP_URI="http://archive.mozilla.org/pub/${PN}/releases"
 
+MOZCONFIG_OPTIONAL_GTK3=1
 MOZCONFIG_OPTIONAL_WIFI=1
 MOZCONFIG_OPTIONAL_JIT="enabled"
 
-inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.41 multilib pax-utils fdo-mime autotools virtualx mozlinguas
+inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.42 multilib pax-utils fdo-mime autotools virtualx mozlinguas
 
 DESCRIPTION="Firefox Web Browser"
 HOMEPAGE="http://www.mozilla.com/firefox"
@@ -71,19 +72,24 @@ if [[ ${PV} =~ alpha ]]; then
 	SRC_URI="${SRC_URI}
 		https://dev.gentoo.org/~nirbheek/mozilla/firefox/firefox-${MOZ_PV}_${CHANGESET}.source.tar.xz"
 	S="${WORKDIR}/mozilla-aurora-${CHANGESET}"
-elif [[ ${PV} =~ beta ]]; then
-	S="${WORKDIR}/${MOZ_P}"
-	SRC_URI="${SRC_URI}
-		${MOZ_HTTP_URI}/${MOZ_PV}/source/firefox-${MOZ_PV}.source.tar.xz"
 else
+	S="${WORKDIR}/firefox-${MOZ_PV}"
 	SRC_URI="${SRC_URI}
 		${MOZ_HTTP_URI}/${MOZ_PV}/source/firefox-${MOZ_PV}.source.tar.xz"
-	if [[ ${MOZ_ESR} == 1 ]]; then
-		S="${WORKDIR}/mozilla-esr${PV%%.*}"
-	else
-		S="${WORKDIR}/mozilla-release"
-	fi
 fi
+#elif [[ ${PV} =~ beta ]]; then
+#	S="${WORKDIR}/mozilla-beta"
+#	SRC_URI="${SRC_URI}
+#		${MOZ_HTTP_URI}/${MOZ_PV}/source/firefox-${MOZ_PV}.source.tar.xz"
+#else
+#	SRC_URI="${SRC_URI}
+#		${MOZ_HTTP_URI}/${MOZ_PV}/source/firefox-${MOZ_PV}.source.tar.xz"
+#	if [[ ${MOZ_ESR} == 1 ]]; then
+#		S="${WORKDIR}/mozilla-esr${PV%%.*}"
+#	else
+#		S="${WORKDIR}/mozilla-release"
+#	fi
+#fi
 
 QA_PRESTRIPPED="usr/$(get_libdir)/${PN}/firefox"
 
@@ -137,10 +143,7 @@ src_prepare() {
 	# Apply our patches
 	EPATCH_SUFFIX="patch" \
 	EPATCH_FORCE="yes" \
-	EPATCH_EXCLUDE="5002_avoid_spurious_run_items_in_application_handlers.patch" \
 	epatch "${WORKDIR}/firefox"
-	epatch "${FILESDIR}"/${PN}-38-dont-hardcode-libc-soname.patch #557956
-	epatch "${FILESDIR}"/5002_avoid_spurious_run_items_in_application_handlers.patch
 
 	# Allow user to apply any additional patches without modifing ebuild
 	epatch_user
