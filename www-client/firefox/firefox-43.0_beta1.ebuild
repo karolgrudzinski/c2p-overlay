@@ -25,7 +25,7 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-42.0-patches-01b2"
+PATCH="${PN}-42.0-patches-02"
 MOZ_HTTP_URI="http://archive.mozilla.org/pub/${PN}/releases"
 
 MOZCONFIG_OPTIONAL_GTK3=1
@@ -66,7 +66,7 @@ DEPEND="${RDEPEND}
 	x86? ( ${ASM_DEPEND}
 		virtual/opengl )"
 
-# No source releases for alpha|beta
+# No source releases for alpha
 if [[ ${PV} =~ alpha ]]; then
 	CHANGESET="8a3042764de7"
 	SRC_URI="${SRC_URI}
@@ -77,19 +77,6 @@ else
 	SRC_URI="${SRC_URI}
 		${MOZ_HTTP_URI}/${MOZ_PV}/source/firefox-${MOZ_PV}.source.tar.xz"
 fi
-#elif [[ ${PV} =~ beta ]]; then
-#	S="${WORKDIR}/mozilla-beta"
-#	SRC_URI="${SRC_URI}
-#		${MOZ_HTTP_URI}/${MOZ_PV}/source/firefox-${MOZ_PV}.source.tar.xz"
-#else
-#	SRC_URI="${SRC_URI}
-#		${MOZ_HTTP_URI}/${MOZ_PV}/source/firefox-${MOZ_PV}.source.tar.xz"
-#	if [[ ${MOZ_ESR} == 1 ]]; then
-#		S="${WORKDIR}/mozilla-esr${PV%%.*}"
-#	else
-#		S="${WORKDIR}/mozilla-release"
-#	fi
-#fi
 
 QA_PRESTRIPPED="usr/$(get_libdir)/${PN}/firefox"
 
@@ -143,6 +130,8 @@ src_prepare() {
 	# Apply our patches
 	EPATCH_SUFFIX="patch" \
 	EPATCH_FORCE="yes" \
+    EPATCH_EXCLUDE="8002_jemalloc_configure_unbashify.patch
+                    8011_bug1194520-freetype261_until_moz43.patch" \
 	epatch "${WORKDIR}/firefox"
 
 	# Allow user to apply any additional patches without modifing ebuild
