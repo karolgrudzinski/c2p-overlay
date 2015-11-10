@@ -25,7 +25,7 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-42.0-patches-02"
+PATCH="${PN}-42.0-patches-0.2"
 MOZ_HTTP_URI="http://archive.mozilla.org/pub/${PN}/releases"
 
 MOZCONFIG_OPTIONAL_GTK3=1
@@ -130,7 +130,7 @@ src_prepare() {
 	# Apply our patches
 	EPATCH_SUFFIX="patch" \
 	EPATCH_FORCE="yes" \
-    EPATCH_EXCLUDE="8002_jemalloc_configure_unbashify.patch
+    EPATCH_EXCLUDE="8002_jemalloc_configure_unbashify.patch \
                     8011_bug1194520-freetype261_until_moz43.patch" \
 	epatch "${WORKDIR}/firefox"
 
@@ -291,7 +291,7 @@ src_install() {
 	pax-mark m "${BUILD_OBJ_DIR}"/dist/bin/xpcshell
 
 	# Add our default prefs for firefox
-	cp "${FILESDIR}"/gentoo-default-prefs.js-1 \
+	cp "${FILESDIR}"/gentoo-default-prefs.js-2 \
 		"${BUILD_OBJ_DIR}/dist/bin/browser/defaults/preferences/all-gentoo.js" \
 		|| die
 
