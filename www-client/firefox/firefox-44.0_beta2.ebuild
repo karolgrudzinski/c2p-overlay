@@ -25,7 +25,7 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-42.0-patches-0.3"
+PATCH="${PN}-43.0-patches-0.1"
 MOZ_HTTP_URI="http://archive.mozilla.org/pub/${PN}/releases"
 
 MOZCONFIG_OPTIONAL_GTK3=1
@@ -130,9 +130,7 @@ src_prepare() {
 	# Apply our patches
 	EPATCH_SUFFIX="patch" \
 	EPATCH_FORCE="yes" \
-	EPATCH_EXCLUDE="8002_jemalloc_configure_unbashify.patch
-			8011_bug1194520-freetype261_until_moz43.patch
-			8012_egl.patch " \
+	EPATCH_EXCLUDE="8012_egl.patch " \
 	epatch "${WORKDIR}/firefox"
 
 	# Allow user to apply any additional patches without modifing ebuild
