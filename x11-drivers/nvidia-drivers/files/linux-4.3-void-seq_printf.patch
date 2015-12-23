@@ -1,0 +1,13 @@
+diff -Naur work.orig/kernel/nv-procfs.c work/kernel/nv-procfs.c
+--- work.orig/kernel/nv-procfs.c	2014-05-27 20:59:51.000000000 +0200
++++ work/kernel/nv-procfs.c	2015-12-23 15:06:22.774035754 +0100
+@@ -356,7 +356,8 @@
+     registry_keys = ((nvl != NULL) ?
+             nvl->registry_keys : nv_registry_keys);
+ 
+-    return seq_printf(s, "Binary: \"%s\"\n", registry_keys);
++    seq_printf(s, "Binary: \"%s\"\n", registry_keys);
++    return 0;
+ }
+ 
+ static ssize_t

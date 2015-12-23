@@ -1,0 +1,13 @@
+diff -Naur work.orig/kernel/nv-procfs.c work/kernel/nv-procfs.c
+--- work.orig/kernel/nv-procfs.c	2015-12-23 15:16:02.274063800 +0100
++++ work/kernel/nv-procfs.c	2015-12-23 15:25:06.092090120 +0100
+@@ -553,7 +553,8 @@
+     void *v
+ )
+ {
+-    return seq_puts(s, s->private);
++    seq_puts(s, s->private);
++    return 0;
+ }
+ 
+ NV_DEFINE_PROCFS_SINGLE_FILE(text_file);

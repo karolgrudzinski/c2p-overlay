@@ -1,0 +1,33 @@
+diff -Naur work.orig/kernel/nv.c work/kernel/nv.c
+--- work.orig/kernel/nv.c	2014-05-27 20:59:51.000000000 +0200
++++ work/kernel/nv.c	2015-03-07 21:18:50.578008418 +0100
+@@ -1827,7 +1827,7 @@
+     unsigned long i_arg
+ )
+ {
+-    return nvidia_ioctl(file->f_dentry->d_inode, file, cmd, i_arg);
++    return nvidia_ioctl(file->f_path.dentry->d_inode, file, cmd, i_arg);
+ }
+ 
+ /*
+diff -Naur work.orig/kernel/nv-frontend.c work/kernel/nv-frontend.c
+--- work.orig/kernel/nv-frontend.c	2014-05-27 20:59:52.000000000 +0200
++++ work/kernel/nv-frontend.c	2015-03-07 21:18:38.959007855 +0100
+@@ -327,7 +327,7 @@
+     unsigned long i_arg
+ )
+ {
+-    return nvidia_frontend_ioctl(file->f_dentry->d_inode, file, cmd, i_arg);
++    return nvidia_frontend_ioctl(file->f_path.dentry->d_inode, file, cmd, i_arg);
+ }
+ 
+ long nvidia_frontend_compat_ioctl(
+@@ -336,7 +336,7 @@
+     unsigned long i_arg
+ )
+ {
+-    return nvidia_frontend_ioctl(file->f_dentry->d_inode, file, cmd, i_arg);
++    return nvidia_frontend_ioctl(file->f_path.dentry->d_inode, file, cmd, i_arg);
+ }
+ 
+ int nvidia_frontend_mmap(

@@ -169,6 +169,21 @@ src_prepare() {
 		epatch "${FILESDIR}"/${PN}-331.13-pax-usercopy.patch
 	fi
 
+	if use kernel_linux; then
+		if kernel_is ge 3 19; then
+			epatch "${FILESDIR}"/linux-3.19.patch
+		fi
+		
+		if kernel_is ge 4 0; then
+			epatch "${FILESDIR}"/linux-4.0.patch
+		fi
+		
+		if kernel_is ge 4 3; then
+			epatch "${FILESDIR}"/linux-4.3-void-seq_printf.patch
+			epatch "${FILESDIR}"/linux-4.3-void-seq_puts.patch
+		fi
+	fi
+	
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
 }
