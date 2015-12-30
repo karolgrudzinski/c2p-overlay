@@ -63,5 +63,9 @@ src_prepare() {
 }
 
 src_configure() {
-	eqmake5 DEFINES=QUAZIP_INSTALLED PREFIX="${D}"/usr phoenix.pro
+	eqmake5 DEFINES=QUAZIP_INSTALLED phoenix.pro
+}
+
+src_install() {
+	einstall INSTALL_ROOT=${ED}
 }
