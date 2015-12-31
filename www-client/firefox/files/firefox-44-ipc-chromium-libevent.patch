@@ -1,0 +1,11 @@
+diff -Naur firefox-44.0b2.orig/ipc/chromium/src/base/message_pump_libevent.cc firefox-44.0b2/ipc/chromium/src/base/message_pump_libevent.cc
+--- firefox-44.0b2.orig/ipc/chromium/src/base/message_pump_libevent.cc	2015-12-22 15:21:08.465722011 +0100
++++ firefox-44.0b2/ipc/chromium/src/base/message_pump_libevent.cc	2015-12-22 15:21:55.214724274 +0100
+@@ -16,6 +16,7 @@
+ #include "base/time.h"
+ #include "nsDependentSubstring.h"
+ #include "third_party/libevent/event.h"
++#include "third_party/libevent/linux/event2/event-config.h"
+ #include "mozilla/UniquePtr.h"
+ 
+ // This macro checks that the _EVENT_SIZEOF_* constants defined in
