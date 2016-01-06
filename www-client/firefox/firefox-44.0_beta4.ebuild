@@ -8,10 +8,10 @@ WANT_AUTOCONF="2.1"
 MOZ_ESR=""
 
 # This list can be updated with scripts/get_langs.sh from the mozilla overlay
-MOZ_LANGS=( ach af an ar as ast az be bg bn-BD bn-IN br bs ca cs cy da de dsb el 
-en en-GB en-US en-ZA eo es-AR es-CL es-ES es-MX et eu fa ff fi fr fy-NL ga-IE gd 
-gl gu-IN he hi-IN hr hsb hu hy-AM id is it ja kk km kn ko lij lt lv mai mk ml mr 
-ms nb-NO nl nn-NO or pa-IN pl pt-BR pt-PT rm ro ru si sk sl son sq sr sv-SE ta 
+MOZ_LANGS=( ach af an ar as ast az be bg bn-BD bn-IN br bs ca cs cy da de dsb el
+en en-GB en-US en-ZA eo es-AR es-CL es-ES es-MX et eu fa ff fi fr fy-NL ga-IE gd
+gl gu-IN he hi-IN hr hsb hu hy-AM id is it ja kk km kn ko lij lt lv mai mk ml mr
+ms nb-NO nl nn-NO or pa-IN pl pt-BR pt-PT rm ro ru si sk sl son sq sr sv-SE ta
 te th tr uk uz vi xh zh-CN zh-TW )
 
 # Convert the ebuild version to the upstream mozilla version, used by mozlinguas
@@ -25,14 +25,14 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-44.0-patches-0.3"
+PATCH="${PN}-43.0-patches-0.1"
 MOZ_HTTP_URI="http://archive.mozilla.org/pub/${PN}/releases"
 
 MOZCONFIG_OPTIONAL_GTK3=1
 MOZCONFIG_OPTIONAL_WIFI=1
 MOZCONFIG_OPTIONAL_JIT="enabled"
 
-inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.44 multilib pax-utils fdo-mime autotools virtualx mozlinguas
+inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.42 multilib pax-utils fdo-mime autotools virtualx mozlinguas
 
 DESCRIPTION="Firefox Web Browser"
 HOMEPAGE="http://www.mozilla.com/firefox"
@@ -41,7 +41,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linu
 
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
-IUSE="bindist egl hardened +hwaccel +minimal pgo selinux +gmp-autoupdate test"
+IUSE="bindist egl hardened +hwaccel +minimal neon pgo selinux +gmp-autoupdate test"
 RESTRICT="!bindist? ( bindist ) mirror"
 
 # More URIs appended below...
@@ -130,7 +130,10 @@ src_prepare() {
 	# Apply our patches
 	EPATCH_SUFFIX="patch" \
 	EPATCH_FORCE="yes" \
+	EPATCH_EXCLUDE="8012_egl.patch " \
 	epatch "${WORKDIR}/firefox"
+	
+	epatch "${FILESDIR}"/firefox-44-ipc-chromium-libevent.patch
 
 	# Allow user to apply any additional patches without modifing ebuild
 	epatch_user
@@ -202,6 +205,22 @@ src_configure() {
 
 	# Add full relro support for hardened
 	use hardened && append-ldflags "-Wl,-z,relro,-z,now"
+
+	if use neon ; then
+		mozconfig_annotate '' --with-fpu=neon
+		mozconfig_annotate '' --with-thumb=yes
+		mozconfig_annotate '' --with-thumb-interwork=no
+	fi
+
+	if [[ ${CHOST} == armv* ]] ; then
+		mozconfig_annotate '' --with-float-abi=hard
+		mozconfig_annotate '' --enable-skia
+
+		if ! use system-libvpx ; then
+			sed -i -e "s|softfp|hard|" \
+				"${S}"/media/libvpx/moz.build
+		fi
+	fi
 
 	use egl && mozconfig_annotate 'Enable EGL as GL provider' --with-gl-provider=EGL
 
