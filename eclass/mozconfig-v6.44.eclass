@@ -54,6 +54,16 @@ esac
 # Set the variable to "enabled" if the use flag should be enabled by default.
 # Set the variable to any value if the use flag should exist but not be default-enabled.
 
+# @ECLASS-VARIABLE: MOZCONFIG_OPTIONAL_QT5
+# @DESCRIPTION:
+# Set this variable before the inherit line, when an ebuild can provide
+# optional qt5 support via IUSE="qt5".  Currently this would include
+# ebuilds for firefox, but thunderbird and seamonkey could follow in the future.
+#
+# Leave the variable UNSET if qt5 support should not be available.
+# Set the variable to "enabled" if the use flag should be enabled by default.
+# Set the variable to any value if the use flag should exist but not be default-enabled.
+
 # use-flags common among all mozilla ebuilds
 IUSE="${IUSE} dbus debug ffmpeg +gstreamer gstreamer-0 +jemalloc3 neon pulseaudio selinux startup-notification system-cairo
 	system-icu system-jpeg system-libevent system-sqlite system-libvpx"
@@ -118,6 +128,24 @@ if [[ -n ${MOZCONFIG_OPTIONAL_GTK3} ]]; then
 	RDEPEND+="
 	gtk3? ( >=x11-libs/gtk+-3.4.0:3 )"
 fi
+if [[ -n ${MOZCONFIG_OPTIONAL_QT5} ]]; then
+	inherit qmake-utils
+	if [[ ${MOZCONFIG_OPTIONAL_QT5} = "enabled" ]]; then
+		IUSE+=" +qt5"
+	else
+		IUSE+=" qt5"
+	fi
+	RDEPEND+="
+	qt5? (
+		dev-qt/qtcore:5
+		dev-qt/qtgui:5
+		dev-qt/qtnetwork:5
+		dev-qt/qtprintsupport:5
+		dev-qt/qtwidgets:5
+		dev-qt/qtxml:5
+		dev-qt/qtdeclarative:5
+	)"
+fi
 if [[ -n ${MOZCONFIG_OPTIONAL_WIFI} ]]; then
 	if [[ ${MOZCONFIG_OPTIONAL_WIFI} = "enabled" ]]; then
 		IUSE+=" +wifi"
@@ -150,6 +178,10 @@ RDEPEND+="
 # only one of gstreamer and gstreamer-0 can be enabled at a time, so set REQUIRED_USE to signify this
 REQUIRED_USE="?? ( gstreamer gstreamer-0 )"
 
+# only one of gtk3 or qt5 should be permitted to be selected, since only one will be used.
+[[ -n ${MOZCONFIG_OPTIONAL_GTK3} ]] && [[ -n ${MOZCONFIG_OPTIONAL_QT5} ]] && \
+	REQUIRED_USE+=" ?? ( gtk3 qt5 )"
+
 # @FUNCTION: mozconfig_config
 # @DESCRIPTION:
 # Set common configure options for mozilla packages.
@@ -174,12 +206,6 @@ mozconfig_config() {
 		--enable-pango \
 		--enable-svg \
 		--with-system-bz2
-
-	if [[ -n ${MOZCONFIG_OPTIONAL_GTK3} ]]; then
-		mozconfig_annotate 'gtk3 use flag' --enable-default-toolkit=$(usex gtk3 cairo-gtk3 cairo-gtk2)
-	else
-		mozconfig_annotate '' --enable-default-toolkit=cairo-gtk2
-	fi
 
 	if has bindist ${IUSE}; then
 		mozconfig_use_enable !bindist official-branding
@@ -239,6 +265,33 @@ mozconfig_config() {
 	mozconfig_annotate 'Gentoo default to honor system linker' --disable-gold
 	mozconfig_annotate 'Gentoo default' --disable-skia
 	mozconfig_annotate '' --disable-gconf
+	mozconfig_annotate '' --with-intl-api
+
+	# default toolkit is cairo-gtk2, optional use flags can change this
+	local toolkit="cairo-gtk2"
+	local toolkit_comment=""
+	if [[ -n ${MOZCONFIG_OPTIONAL_GTK3} ]]; then
+		if use gtk3; then
+			toolkit="cairo-gtk3"
+			toolkit_comment="gtk3 use flag"
+		fi
+	fi
+	if [[ -n ${MOZCONFIG_OPTIONAL_QT5} ]]; then
+		if use qt5; then
+			toolkit="cairo-qt"
+			toolkit_comment="qt5 use flag"
+			# need to specify these vars because the qt5 versions are not found otherwise,
+			# and setting --with-qtdir overrides the pkg-config include dirs
+			local i
+			for i in qmake moc rcc; do
+				echo "export HOST_${i^^}=\"$(qt5_get_bindir)/${i}\"" \
+					>> "${S}"/.mozconfig || die
+			done
+			echo 'unset QTDIR' >> "${S}"/.mozconfig || die
+			mozconfig_annotate '+qt5' --disable-gio
+		fi
+	fi
+	mozconfig_annotate "${toolkit_comment}" --enable-default-toolkit=${toolkit}
 
 	# Use jemalloc unless libc is not glibc >= 2.4
 	# at this time the minimum glibc in the tree is 2.9 so we should be safe.
@@ -254,8 +307,10 @@ mozconfig_config() {
 
 	use ffmpeg || mozconfig_annotate '-ffmpeg' --disable-ffmpeg
 	if use gstreamer ; then
+		use ffmpeg && einfo "${PN} will not use ffmpeg unless gstreamer:1.0 is not available at runtime"
 		mozconfig_annotate '+gstreamer' --enable-gstreamer=1.0
 	elif use gstreamer-0 ; then
+		use ffmpeg && einfo "${PN} will not use ffmpeg unless gstreamer:0.10 is not available at runtime"
 		mozconfig_annotate '+gstreamer-0' --enable-gstreamer=0.10
 	else
 		mozconfig_annotate '' --disable-gstreamer
@@ -266,7 +321,6 @@ mozconfig_config() {
 	mozconfig_use_enable system-sqlite
 	mozconfig_use_with system-jpeg
 	mozconfig_use_with system-icu
-	mozconfig_use_with system-icu intl-api
 	mozconfig_use_with system-libvpx
 
 	# Modifications to better support ARM, bug 553364
