@@ -1,6 +1,6 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-drivers/nvidia-drivers/nvidia-drivers-337.25.ebuild,v 1.5 2014/07/30 19:22:29 ssuominen Exp $
+# $Id$
 
 EAPI=5
 
@@ -46,7 +46,7 @@ RDEPEND="
 	acpi? ( sys-power/acpid )
 	tools? (
 		dev-libs/atk
-		dev-libs/glib
+		dev-libs/glib:2
 		x11-libs/gdk-pixbuf
 		>=x11-libs/gtk+-2.4:2
 		x11-libs/libX11
@@ -54,7 +54,7 @@ RDEPEND="
 		x11-libs/pango[X]
 	)
 	X? (
-		<x11-base/xorg-server-1.16.99
+		<x11-base/xorg-server-1.16.99:=
 		>=x11-libs/libvdpau-0.3-r1
 		multilib? (
 			>=x11-libs/libX11-1.6.2[abi_x86_32]
@@ -77,7 +77,7 @@ pkg_pretend() {
 		die "Unexpected \${DEFAULT_ABI} = ${DEFAULT_ABI}"
 	fi
 
-	if use kernel_linux && kernel_is ge 3 15 ; then
+	if use kernel_linux && kernel_is ge 3 15; then
 		ewarn "Gentoo supports kernels which are supported by NVIDIA"
 		ewarn "which are limited to the following kernels:"
 		ewarn "<sys-kernel/gentoo-sources-3.15"
@@ -90,7 +90,7 @@ pkg_pretend() {
 		ewarn "Do not file a bug report about this."
 	fi
 
-	# Since Nvidia ships 3 different series of drivers, we need to give the user
+	# Since Nvidia ships many different series of drivers, we need to give the user
 	# some kind of guidance as to what version they should install. This tries
 	# to point the user in the right direction but can't be perfect. check
 	# nvidia-driver.eclass
@@ -167,21 +167,20 @@ src_prepare() {
 		ewarn "use a standard kernel should you have issues. Should you"
 		ewarn "need support with these patches, contact the PaX team."
 		epatch "${FILESDIR}"/${PN}-331.13-pax-usercopy.patch
+		epatch "${FILESDIR}"/${PN}-337.12-pax-constify.patch
 	fi
 
 	if use kernel_linux; then
 		if kernel_is ge 3 19; then
 			epatch "${FILESDIR}"/linux-3.19.patch
 		fi
-		
 		if kernel_is ge 4 0; then
 			epatch "${FILESDIR}"/linux-4.0.patch
-		fi
-		
+		fi  
 		if kernel_is ge 4 3; then
 			epatch "${FILESDIR}"/linux-4.3-void-seq_printf.patch
 			epatch "${FILESDIR}"/linux-4.3-void-seq_puts.patch
-		fi
+		fi  
 	fi
 	
 	# Allow user patches so they can support RC kernels and whatever else
@@ -258,7 +257,7 @@ src_install() {
 
 		# Ensures that our device nodes are created when not using X
 		exeinto "$(get_udevdir)"
-		doexe "${FILESDIR}"/nvidia-udev.sh
+		newexe "${FILESDIR}"/nvidia-udev.sh-r1 nvidia-udev.sh
 		udev_newrules "${FILESDIR}"/nvidia.udev-rule 99-nvidia.rules
 	elif use kernel_FreeBSD; then
 		if use x86-fbsd; then
@@ -338,14 +337,19 @@ src_install() {
 		doman nvidia-modprobe.1.gz
 		doman nvidia-persistenced.1.gz
 		newinitd "${FILESDIR}/nvidia-smi.init" nvidia-smi
+		newconfd "${FILESDIR}/nvidia-persistenced.conf" nvidia-persistenced
+		newinitd "${FILESDIR}/nvidia-persistenced.init" nvidia-persistenced
 	fi
 
 	if use tools; then
 		doexe ${NV_OBJ}/nvidia-settings
+		insinto /usr/share/nvidia/
+		doins nvidia-application-profiles-${PV}-key-documentation
+		insinto /etc/nvidia
+		newins nvidia-application-profiles-${PV}-rc nvidia-application-profiles-rc
 	fi
 
-	exeinto /usr/bin/
-	doexe ${NV_OBJ}/nvidia-bug-report.sh
+	dobin ${NV_OBJ}/nvidia-bug-report.sh
 
 	# Desktop entries for nvidia-settings
 	if use tools ; then
