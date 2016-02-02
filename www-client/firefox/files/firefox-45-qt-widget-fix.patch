@@ -1,0 +1,11 @@
+--- a/widget/qt/nsWindow.cpp	2016-02-02 09:29:37.173069603 +0100
++++ b/widget/qt/nsWindow.cpp	2016-02-02 09:29:19.062068727 +0100
+@@ -599,7 +599,7 @@
+     for (uint32_t i = 0; i < aConfigurations.Length(); ++i) {
+         const Configuration& configuration = aConfigurations[i];
+ 
+-        nsWindow* w = static_cast<nsWindow*>(configuration.mChild);
++        nsWindow* w = static_cast<nsWindow*>(configuration.mChild.get());
+         NS_ASSERTION(w->GetParent() == this,
+                      "Configured widget is not a child");
+ 
