@@ -75,7 +75,7 @@ IUSE="${IUSE} dbus debug ffmpeg +gstreamer gstreamer-0 +jemalloc3 neon pulseaudi
 RDEPEND=">=app-text/hunspell-1.2
 	dev-libs/atk
 	dev-libs/expat
-	>=dev-libs/libevent-1.4.7
+	>=dev-libs/libevent-1.4.7:=
 	>=x11-libs/cairo-1.10[X]
 	>=x11-libs/gtk+-2.18:2
 	x11-libs/gdk-pixbuf
@@ -93,7 +93,7 @@ RDEPEND=">=app-text/hunspell-1.2
 	>=dev-libs/glib-2.26:2
 	>=sys-libs/zlib-1.2.3
 	>=virtual/libffi-3.0.10
-	ffmpeg? ( virtual/ffmpeg[mp3,x264] )
+	ffmpeg? ( virtual/ffmpeg )
 	gstreamer? (
 		>=media-libs/gstreamer-1.4.5:1.0
 		>=media-libs/gst-plugins-base-1.4.5:1.0

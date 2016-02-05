@@ -25,10 +25,10 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-44.0-patches-0.4"
+PATCH="${PN}-45.0-patches-0.1"
 MOZ_HTTP_URI="http://archive.mozilla.org/pub/${PN}/releases"
 
-MOZCONFIG_OPTIONAL_GTK3=1
+MOZCONFIG_OPTIONAL_GTK3="enabled"
 MOZCONFIG_OPTIONAL_QT5=1
 MOZCONFIG_OPTIONAL_WIFI=1
 MOZCONFIG_OPTIONAL_JIT="enabled"
@@ -131,7 +131,6 @@ src_prepare() {
 	# Apply our patches
 	EPATCH_SUFFIX="patch" \
 	EPATCH_FORCE="yes" \
-    EPATCH_EXCLUDE="2000-firefox_gentoo_install_dirs.patch" \
 	epatch "${WORKDIR}/firefox"
 	epatch "${FILESDIR}"/${PN}-45-qt-widget-fix.patch
 
