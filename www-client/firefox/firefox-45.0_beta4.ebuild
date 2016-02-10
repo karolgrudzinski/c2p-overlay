@@ -10,9 +10,9 @@ MOZ_ESR=""
 # This list can be updated with scripts/get_langs.sh from the mozilla overlay
 MOZ_LANGS=( ach af an ar as ast az be bg bn-BD bn-IN br bs ca cs cy da de dsb el
 en en-GB en-US en-ZA eo es-AR es-CL es-ES es-MX et eu fa ff fi fr fy-NL ga-IE gd
-gl gu-IN he hi-IN hr hsb hu hy-AM id is it ja kk km kn ko lij lt lv mai mk ml mr
-ms nb-NO nl nn-NO or pa-IN pl pt-BR pt-PT rm ro ru si sk sl son sq sr sv-SE ta
-te th tr uk uz vi xh zh-CN zh-TW )
+gl gn gu-IN he hi-IN hr hsb hu hy-AM id is it ja kk km kn ko lij lt lv mai mk ml
+mr ms nb-NO nl nn-NO or pa-IN pl pt-BR pt-PT rm ro ru si sk sl son sq sr sv-SE
+ta te th tr uk uz vi xh zh-CN zh-TW )
 
 # Convert the ebuild version to the upstream mozilla version, used by mozlinguas
 MOZ_PV="${PV/_alpha/a}" # Handle alpha for SRC_URI
@@ -55,8 +55,8 @@ ASM_DEPEND=">=dev-lang/yasm-1.1"
 
 # Mesa 7.10 needed for WebGL + bugfixes
 RDEPEND="
-	>=dev-libs/nss-3.20.1
-	>=dev-libs/nspr-4.10.10-r1
+	>=dev-libs/nss-3.21
+	>=dev-libs/nspr-4.11
 	selinux? ( sec-policy/selinux-mozilla )"
 
 DEPEND="${RDEPEND}
