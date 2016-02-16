@@ -75,7 +75,6 @@ IUSE="${IUSE} dbus debug ffmpeg +gstreamer gstreamer-0 +jemalloc3 neon pulseaudi
 RDEPEND=">=app-text/hunspell-1.2
 	dev-libs/atk
 	dev-libs/expat
-	>=dev-libs/libevent-1.4.7:=
 	>=x11-libs/cairo-1.10[X]
 	>=x11-libs/gtk+-2.18:2
 	x11-libs/gdk-pixbuf
@@ -114,7 +113,7 @@ RDEPEND=">=app-text/hunspell-1.2
 	system-cairo? ( >=x11-libs/cairo-1.12[X,xcb] >=x11-libs/pixman-0.19.2 )
 	system-icu? ( >=dev-libs/icu-51.1:= )
 	system-jpeg? ( >=media-libs/libjpeg-turbo-1.2.1 )
-	system-libevent? ( =dev-libs/libevent-2.0* )
+	system-libevent? ( dev-libs/libevent:0/2.0-5 )
 	system-sqlite? ( >=dev-db/sqlite-3.9.1:3[secure-delete,debug=] )
 	system-libvpx? ( >=media-libs/libvpx-1.3.0:0=[postproc] )
 "
