@@ -170,7 +170,7 @@ mozlinguas_export() {
 	if [[ ${PN} == seamonkey ]] ; then
 		[[ ${PV} =~ alpha ]] && ! [[ -n ${MOZ_GENERATE_LANGPACKS} ]] && return
 	else
-		[[ ${PV} =~ alpha|beta ]] && ! [[ -n ${MOZ_GENERATE_LANGPACKS} ]] && return
+		[[ ${PV} =~ alpha ]] && ! [[ -n ${MOZ_GENERATE_LANGPACKS} ]] && return
 	fi
 	local lingua
 	mozlinguas=()
@@ -191,6 +191,7 @@ mozlinguas_export() {
 		fi
 		ewarn "Sorry, but ${P} does not support the ${lingua} locale"
 	done
+	einfo $mozlinguas
 }
 
 # @FUNCTION: mozlinguas_src_unpack
