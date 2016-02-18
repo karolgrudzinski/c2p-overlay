@@ -191,7 +191,6 @@ mozlinguas_export() {
 		fi
 		ewarn "Sorry, but ${P} does not support the ${lingua} locale"
 	done
-	einfo $mozlinguas
 }
 
 # @FUNCTION: mozlinguas_src_unpack
