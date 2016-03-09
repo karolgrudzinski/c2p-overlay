@@ -113,7 +113,7 @@ RDEPEND=">=app-text/hunspell-1.2
 	system-cairo? ( >=x11-libs/cairo-1.12[X,xcb] >=x11-libs/pixman-0.19.2 )
 	system-icu? ( >=dev-libs/icu-51.1:= )
 	system-jpeg? ( >=media-libs/libjpeg-turbo-1.2.1 )
-	system-libevent? ( dev-libs/libevent:0/2.0-5 )
+	system-libevent? ( =dev-libs/libevent-2.0*:0= )
 	system-sqlite? ( >=dev-db/sqlite-3.9.1:3[secure-delete,debug=] )
 	system-libvpx? ( >=media-libs/libvpx-1.3.0:0=[postproc] )
 "
