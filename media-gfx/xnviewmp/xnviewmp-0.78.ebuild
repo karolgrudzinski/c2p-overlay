@@ -55,6 +55,7 @@ BUNDLED_LIBS_DEPEND="dev-qt/qtcore:5
     dev-qt/qtopengl:5
     dev-qt/qtsql:5
     dev-qt/qtdbus:5
+    dev-qt/qtwebkit:5
     dev-libs/icu"
 
 RDEPEND=">=dev-libs/glib-2
