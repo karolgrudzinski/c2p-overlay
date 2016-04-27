@@ -19,7 +19,7 @@ inherit mozextension
 case "${EAPI:-0}" in
 	0|1)
 		die "EAPI ${EAPI:-0} does not support the '->' SRC_URI operator";;
-	2|3|4|5)
+	2|3|4|5|6)
 		EXPORT_FUNCTIONS src_unpack src_compile src_install;;
 	*)
 		die "EAPI ${EAPI} is not supported, contact eclass maintainers";;
@@ -121,7 +121,7 @@ esac
 # Add linguas_* to IUSE according to available language packs
 # No language packs for alphas and betas
 if ! [[ -n ${MOZ_GENERATE_LANGPACKS} ]] ; then
-	if ! [[ ${PV} =~ alpha|beta ]] || { [[ ${PN} == seamonkey ]] && ! [[ ${PV} =~ alpha ]] ; } || [[ -n ${MOZ_FORCE_UPSTREAM_L10N} ]] ; then
+	if ! [[ ${PV} =~ alpha ]] || { [[ ${PN} == seamonkey ]] && ! [[ ${PV} =~ alpha ]] ; } || [[ -n ${MOZ_FORCE_UPSTREAM_L10N} ]] ; then
 	[[ -z ${MOZ_FTP_URI} ]] && [[ -z ${MOZ_HTTP_URI} ]] && die "No URI set to download langpacks, please set one of MOZ_{FTP,HTTP}_URI"
 	for x in "${MOZ_LANGS[@]}" ; do
 		# en and en_US are handled internally
