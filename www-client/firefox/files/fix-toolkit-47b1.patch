@@ -1,0 +1,67 @@
+diff -Naur firefox-47.0b1.orig/toolkit/crashreporter/google-breakpad/src/common/linux/dump_symbols.cc firefox-47.0b1/toolkit/crashreporter/google-breakpad/src/common/linux/dump_symbols.cc
+--- firefox-47.0b1.orig/toolkit/crashreporter/google-breakpad/src/common/linux/dump_symbols.cc	2016-04-26 17:07:52.000000000 +0200
++++ firefox-47.0b1/toolkit/crashreporter/google-breakpad/src/common/linux/dump_symbols.cc	2016-05-01 10:57:14.242383994 +0200
+@@ -45,6 +45,7 @@
+ #include <sys/mman.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
++#include <libgen.h>
+ 
+ #include <iostream>
+ #include <set>
+diff -Naur firefox-47.0b1.orig/toolkit/crashreporter/google-breakpad/src/common/stabs_reader.cc firefox-47.0b1/toolkit/crashreporter/google-breakpad/src/common/stabs_reader.cc
+--- firefox-47.0b1.orig/toolkit/crashreporter/google-breakpad/src/common/stabs_reader.cc	2016-05-01 10:29:18.781302907 +0200
++++ firefox-47.0b1/toolkit/crashreporter/google-breakpad/src/common/stabs_reader.cc	2016-05-01 10:57:14.242383994 +0200
+@@ -40,6 +40,10 @@
+ 
+ #include "common/using_std_string.h"
+ 
++#ifndef N_UNDF
++#define N_UNDF 0
++#endif
++
+ using std::vector;
+ 
+ namespace google_breakpad {
+diff -Naur firefox-47.0b1.orig/toolkit/mozapps/update/common/updatedefines.h firefox-47.0b1/toolkit/mozapps/update/common/updatedefines.h
+--- firefox-47.0b1.orig/toolkit/mozapps/update/common/updatedefines.h	2016-04-26 17:07:53.000000000 +0200
++++ firefox-47.0b1/toolkit/mozapps/update/common/updatedefines.h	2016-05-01 10:57:14.245383995 +0200
+@@ -117,7 +117,7 @@
+ 
+ #ifdef SOLARIS
+ # include <sys/stat.h>
+-#else
++#elif !defined(__linux__) || defined(__GLIBC__)
+ # include <fts.h>
+ #endif
+ # include <dirent.h>
+diff -Naur firefox-47.0b1.orig/toolkit/mozapps/update/updater/updater.cpp firefox-47.0b1/toolkit/mozapps/update/updater/updater.cpp
+--- firefox-47.0b1.orig/toolkit/mozapps/update/updater/updater.cpp	2016-04-26 17:07:54.000000000 +0200
++++ firefox-47.0b1/toolkit/mozapps/update/updater/updater.cpp	2016-05-01 10:57:14.246383995 +0200
+@@ -3690,6 +3690,7 @@
+ int add_dir_entries(const NS_tchar *dirpath, ActionList *list)
+ {
+   int rv = OK;
++#if !defined(__linux__) || defined(__GLIBC__)
+   FTS *ftsdir;
+   FTSENT *ftsdirEntry;
+   NS_tchar searchpath[MAXPATHLEN];
+@@ -3793,6 +3794,7 @@
+   }
+ 
+   fts_close(ftsdir);
++#endif
+ 
+   return rv;
+ }
+diff -Naur firefox-47.0b1.orig/toolkit/xre/nsSigHandlers.cpp firefox-47.0b1/toolkit/xre/nsSigHandlers.cpp
+--- firefox-47.0b1.orig/toolkit/xre/nsSigHandlers.cpp	2016-04-26 17:07:54.000000000 +0200
++++ firefox-47.0b1/toolkit/xre/nsSigHandlers.cpp	2016-05-01 10:57:14.246383995 +0200
+@@ -15,6 +15,7 @@
+ #include <signal.h>
+ #include <stdio.h>
+ #include <string.h>
++#include <stdint.h>
+ #include "prthread.h"
+ #include "plstr.h"
+ #include "prenv.h"

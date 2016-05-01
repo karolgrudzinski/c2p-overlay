@@ -77,7 +77,7 @@ esac
 # The status of the langpack, used to differentiate within
 # Manifests and on Gentoo mirrors as to when the langpacks are
 # generated officially by Mozilla or if they were generated
-# unofficially by others (ie the Gentoo mozilla team).  When
+# unofficially by others (ie the Gentoo mozilla team).	When
 # this var is set, the distfile will have a .unofficial.xpi
 # suffix.
 : ${MOZ_LANGPACK_UNOFFICIAL:=""}
@@ -99,7 +99,7 @@ esac
 
 # @ECLASS-VARIABLE: MOZ_L10N_URI_PREFIX
 # @DESCRIPTION:
-# The full URI prefix of the distfile for each l10n locale.  The
+# The full URI prefix of the distfile for each l10n locale.	 The
 # AB_CD and MOZ_L10N_URI_SUFFIX will be appended to this to complete the
 # SRC_URI when MOZ_GENERATE_LANGPACKS is set.  If empty, nothing will
 # be added to SRC_URI.
@@ -266,8 +266,8 @@ mozlinguas_src_compile() {
 #
 # Example - installing extra langpacks for lightning:
 # src_install() {
-# 	... # general installation steps
-# 	mozlinguas_xpistage_langpacks \
+#	... # general installation steps
+#	mozlinguas_xpistage_langpacks \
 #		"${BUILD_OBJ_DIR}"/dist/xpi-stage/lightning \
 #		"${WORKDIR}"/lightning \
 #		lightning calendar
