@@ -1,12 +1,12 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
-EAPI="3"
+EAPI="5"
 
 inherit eutils java-pkg-2
 
-DESCRIPTION="yEd Graph Editor can be used to quickly and effectively generate high-quality drawings of diagrams."
+DESCRIPTION="yEd Graph Editor - High-quality diagrams made easy"
 HOMEPAGE="http://www.yworks.com/en/products_yed_about.html"
 SRC_URI="yEd-${PV}.zip"
 DOWNLOAD_URL="http://www.yworks.com/en/products_download.php?file=${SRC_URI}"
@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 RESTRICT="fetch"
 
-RDEPEND=">=virtual/jre-1.6"
+RDEPEND=">=virtual/jre-1.6:*"
 DEPEND="
 	app-arch/unzip
 	${RDEPEND}"
@@ -33,8 +33,9 @@ src_unpack() {
 }
 
 src_install() {
-	java-pkg_newjar "${S}/${P}"/${PN}.jar
-	java-pkg_dolauncher ${PN}
+	java-pkg_dojar "${S}/${P}"/lib/*
+	java-pkg_dojar "${S}/${P}"/${PN}.jar
+	java-pkg_dolauncher yed --jar ${PN}.jar
 	doicon "${S}/${P}/icons/yicon32.png"
 	make_desktop_entry ${PN} "yEd Graph Editor" yicon32 "Graphics;2DGraphics"
 	dodoc "${S}/${P}"/license.html
