@@ -4,7 +4,7 @@
 
 EAPI=6
 
-inherit eutils
+inherit eutils fdo-mime
 
 DESCRIPTION="XnView MP image viewer/converter"
 HOMEPAGE="http://www.xnview.com/"
@@ -40,7 +40,8 @@ BUNDLED_LIBS="
 	libQt5Xml.so.5	  libQt5Xml.so.5.5.1
 	libQt5Concurrent.so.5	 libQt5Concurrent.so.5.5.1
 	libicudata.so.54	libicui18n.so.54	libicuuc.so.54
-	libicudata.so.54.1	libicui18n.so.54.1	libicuuc.so.54.1"
+	libicudata.so.54.1	libicui18n.so.54.1	libicuuc.so.54.1
+	audio/ platforms/ printsupport/"
 
 BUNDLED_LIBS_DEPEND="dev-qt/qtcore:5
 	dev-qt/qtgui:5
@@ -56,6 +57,7 @@ BUNDLED_LIBS_DEPEND="dev-qt/qtcore:5
 	dev-qt/qtsql:5
 	dev-qt/qtdbus:5
 	dev-qt/qtwebkit:5
+	dev-qt/qtimageformats:5
 	dev-libs/icu"
 
 RDEPEND=">=dev-libs/glib-2
@@ -77,6 +79,7 @@ src_prepare() {
 		for libname in ${BUNDLED_LIBS} ; do
 			rm -rv "${S}"/lib/${libname} || die "Failed removing bundled ${libname}"
 		done
+		rm "${S}"/qt.conf
 	fi
 }
 
@@ -94,4 +97,9 @@ src_install() {
 	# Install icon and .desktop for menu entry
 	newicon "${D}"${XNVIEW_HOME}/xnview.png ${PN}.png
 	make_desktop_entry xnview XnviewMP ${PN} "Graphics" || die "desktop file sed failed"
+}
+
+pkg_postinst(){
+    fdo-mime_desktop_database_update
+    fdo-mime_mime_database_update
 }
