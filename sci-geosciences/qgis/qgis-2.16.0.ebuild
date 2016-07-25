@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -126,7 +126,7 @@ src_configure() {
 
 src_install() {
 	cmake-utils_src_install
-	dodoc BUGS ChangeLog COPYING
+	dodoc BUGS ChangeLog
 
 	newicon -s 128 images/icons/qgis-icon.png qgis.png
 	make_desktop_entry qgis "QGIS " qgis
