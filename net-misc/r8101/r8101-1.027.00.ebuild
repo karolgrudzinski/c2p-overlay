@@ -29,7 +29,12 @@ pkg_nofetch() {
 }
 
 src_prepare() {
-    epatch "${FILESDIR}/r8101-linux-4-compat.patch"
+    if kernel_is ge 4 0; then
+        epatch "${FILESDIR}/r8101-linux-4.0-compat.patch"
+    fi
+    if kernel_is ge 4 7; then
+        epatch "${FILESDIR}/r8101-linux-4.7-compat1.patch"
+    fi
 }
 
 pkg_setup() {

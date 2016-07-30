@@ -1,0 +1,12 @@
+diff -Naur r8101-1.029.00.orig/src/r8101_n.c r8101-1.029.00/src/r8101_n.c
+--- r8101-1.029.00.orig/src/r8101_n.c	2016-07-31 01:13:28.364226433 +0200
++++ r8101-1.029.00/src/r8101_n.c	2016-07-31 01:14:21.559229007 +0200
+@@ -11868,7 +11866,7 @@
+         wmb();
+         txd->opts1 = cpu_to_le32(opts1);
+ 
+-        dev->trans_start = jiffies;
++        netif_trans_update(dev);
+ 
+         tp->cur_tx += frags + 1;
+ 
