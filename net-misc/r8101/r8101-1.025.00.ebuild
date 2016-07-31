@@ -1,11 +1,11 @@
-# Copyright 1999-2006 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 inherit linux-info toolchain-funcs linux-mod eutils
 
-DESCRIPTION="Drivers for Realtek 810x 840x based PCI-E/PCI Ethernet Cards"
+DESCRIPTION="Driver for Realtek 810x/840x based PCI-E/PCI Ethernet Cards (PCI_ID 10ec:8136)"
 HOMEPAGE="http://www.realtek.com.tw/ http://bit.ly/1c8XQqN"
 #MY_PV="v${PV}"
 #MY_P="${PN}-${MY_PV}"
@@ -20,8 +20,8 @@ RESTRICT="fetch"
 #    http://www.realtek.com.tw/downloads/RedirectFTPSite.aspx?SiteID=6&DownTypeID=3&DownID=263&PFid=7&Conn=4&FTPPath=ftp%3a%2f%2f202.134.71.21%2fcn%2fnic/r8101-1.024.00.tar.bz2
 #    "
 SRC_URI="ftp://61.56.86.122/cn/nic/${P}.tar.bz2
-    ftp://210.51.181.211/cn/nic/${P}.tar.bz2
-    ftp://152.104.238.194/cn/nic/${P}.tar.bz2"
+	ftp://210.51.181.211/cn/nic/${P}.tar.bz2
+	ftp://152.104.238.194/cn/nic/${P}.tar.bz2"
 LICENSE=""
 SLOT="0"
 KEYWORDS="amd64 ~ppc ppc64 ~sparc x86"
@@ -36,13 +36,13 @@ MODULE_NAMES="r8101(net/ethernet::src)"
 BUILD_TARGETS="modules"
 
 src_prepare() {
-    if kernel_is ge 3 15; then
-        epatch ${FILESDIR}/r8101-linux-3.15.patch
-        epatch ${FILESDIR}/r8101-linux-3.15plus.patch
-    fi
+	if kernel_is ge 3 15; then
+		epatch "${FILESDIR}"/r8101-linux-3.15.patch
+		epatch "${FILESDIR}"/r8101-linux-3.15plus.patch
+	fi
 }
 
 pkg_setup() {
-    linux-mod_pkg_setup
-    BUILD_PARAMS="KERNELDIR=${KV_DIR}"
+	linux-mod_pkg_setup
+	BUILD_PARAMS="KERNELDIR=${KV_DIR}"
 }
