@@ -17,7 +17,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 RESTRICT="fetch"
 
-RDEPEND=">=virtual/jre-1.6:*"
+RDEPEND=">=virtual/jre-1.8"
 DEPEND="
 	app-arch/unzip
 	${RDEPEND}"
