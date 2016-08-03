@@ -27,7 +27,7 @@ case ${EAPI} in
 		;;
 esac
 
-inherit flag-o-matic toolchain-funcs mozcoreconf-v3
+inherit flag-o-matic toolchain-funcs mozcoreconf-v4
 
 # @ECLASS-VARIABLE: MOZCONFIG_OPTIONAL_WIFI
 # @DESCRIPTION:
@@ -62,7 +62,7 @@ inherit flag-o-matic toolchain-funcs mozcoreconf-v3
 # @ECLASS-VARIABLE: MOZCONFIG_OPTIONAL_GTK2ONLY
 # @DESCRIPTION:
 # Set this variable before the inherit line, when an ebuild can provide
-# optional gtk2-only support via IUSE="force-gtk2".
+# optional gtk2-only support via IUSE="gtk2".
 #
 # Note that this option conflicts directly with MOZCONFIG_OPTIONAL_GTK3, both
 # variables cannot be set at the same time and this variable will be ignored if
@@ -83,7 +83,7 @@ inherit flag-o-matic toolchain-funcs mozcoreconf-v3
 # Set the variable to any value if the use flag should exist but not be default-enabled.
 
 # use-flags common among all mozilla ebuilds
-IUSE="${IUSE} dbus debug +ffmpeg +jemalloc3 neon pulseaudio selinux startup-notification system-cairo
+IUSE="${IUSE} dbus debug +jemalloc3 neon pulseaudio selinux +skia startup-notification system-cairo
 	system-harfbuzz system-icu system-jpeg system-libevent system-sqlite system-libvpx"
 
 # some notes on deps:
@@ -97,7 +97,7 @@ RDEPEND=">=app-text/hunspell-1.2
 	>=x11-libs/gtk+-2.18:2
 	x11-libs/gdk-pixbuf
 	>=x11-libs/pango-1.22.0
-	>=media-libs/libpng-1.6.19:0=[apng]
+	>=media-libs/libpng-1.6.21:0=[apng]
 	>=media-libs/mesa-10.2:*
 	media-libs/fontconfig
 	>=media-libs/freetype-2.4.10
@@ -110,7 +110,7 @@ RDEPEND=">=app-text/hunspell-1.2
 	>=dev-libs/glib-2.26:2
 	>=sys-libs/zlib-1.2.3
 	>=virtual/libffi-3.0.10
-	ffmpeg? ( virtual/ffmpeg )
+	virtual/ffmpeg
 	x11-libs/libX11
 	x11-libs/libXcomposite
 	x11-libs/libXdamage
@@ -122,9 +122,9 @@ RDEPEND=">=app-text/hunspell-1.2
 	system-icu? ( >=dev-libs/icu-51.1:= )
 	system-jpeg? ( >=media-libs/libjpeg-turbo-1.2.1 )
 	system-libevent? ( =dev-libs/libevent-2.0*:0= )
-	system-sqlite? ( >=dev-db/sqlite-3.10.2:3[secure-delete,debug=] )
-	system-libvpx? ( >=media-libs/libvpx-1.3.0:0=[postproc,svc(-)] )
-	system-harfbuzz? ( >=media-libs/harfbuzz-1.1.3:0=[graphite,icu] >=media-gfx/graphite2-1.3.8 )
+	system-sqlite? ( >=dev-db/sqlite-3.11.0:3[secure-delete,debug=] )
+	system-libvpx? ( >=media-libs/libvpx-1.5.0:0=[postproc] )
+	system-harfbuzz? ( >=media-libs/harfbuzz-1.2.6:0=[graphite,icu] >=media-gfx/graphite2-1.3.8 )
 "
 
 if [[ -n ${MOZCONFIG_OPTIONAL_GTK3} ]]; then
@@ -138,12 +138,12 @@ if [[ -n ${MOZCONFIG_OPTIONAL_GTK3} ]]; then
 	gtk3? ( >=x11-libs/gtk+-3.4.0:3 )"
 elif [[ -n ${MOZCONFIG_OPTIONAL_GTK2ONLY} ]]; then
 	if [[ ${MOZCONFIG_OPTIONAL_GTK2ONLY} = "enabled" ]]; then
-		IUSE+=" +force-gtk2"
+		IUSE+=" +gtk2"
 	else
-		IUSE+=" force-gtk2"
+		IUSE+=" gtk2"
 	fi
 	RDEPEND+="
-	!force-gtk2? ( >=x11-libs/gtk+-3.4.0:3 )"
+	!gtk2? ( >=x11-libs/gtk+-3.4.0:3 )"
 fi
 if [[ -n ${MOZCONFIG_OPTIONAL_QT5} ]]; then
 	inherit qmake-utils
@@ -187,6 +187,7 @@ fi
 DEPEND="app-arch/zip
 	app-arch/unzip
 	>=sys-devel/binutils-2.16.1
+	sys-apps/findutils
 	${RDEPEND}"
 
 RDEPEND+="
@@ -200,9 +201,9 @@ REQUIRED_USE="
 [[ -n ${MOZCONFIG_OPTIONAL_GTK3} ]] && [[ -n ${MOZCONFIG_OPTIONAL_QT5} ]] && \
 	REQUIRED_USE+=" ?? ( gtk3 qt5 )"
 
-# only one of force-gtk2 or qt5 should be permitted to be selected, since only one will be used.
+# only one of gtk2 or qt5 should be permitted to be selected, since only one will be used.
 [[ -n ${MOZCONFIG_OPTIONAL_GTK2ONLY} ]] && [[ -n ${MOZCONFIG_OPTIONAL_QT5} ]] && \
-	REQUIRED_USE+=" ?? ( force-gtk2 qt5 )"
+	REQUIRED_USE+=" ?? ( gtk2 qt5 )"
 
 # @FUNCTION: mozconfig_config
 # @DESCRIPTION:
@@ -225,8 +226,6 @@ mozconfig_config() {
 	# Migrated from mozcoreconf-2
 	mozconfig_annotate 'system_libs' \
 		--with-system-zlib \
-		--enable-pango \
-		--enable-svg \
 		--with-system-bz2
 
 	if has bindist ${IUSE}; then
@@ -261,20 +260,16 @@ mozconfig_config() {
 		mozconfig_annotate 'disabled' --disable-necko-wifi
 	fi
 
-	# These are forced-on for webm support
-	mozconfig_annotate 'required' --enable-ogg
-	mozconfig_annotate 'required' --enable-wave
-
 	if [[ -n ${MOZCONFIG_OPTIONAL_JIT} ]]; then
 		mozconfig_use_enable jit ion
 	fi
 
 	# These are enabled by default in all mozilla applications
-	mozconfig_annotate '' --with-system-nspr --with-nspr-prefix="${EPREFIX}"/usr
-	mozconfig_annotate '' --with-system-nss --with-nss-prefix="${EPREFIX}"/usr
-	mozconfig_annotate '' --x-includes="${EPREFIX}"/usr/include --x-libraries="${EPREFIX}"/usr/$(get_libdir)
+	mozconfig_annotate '' --with-system-nspr --with-nspr-prefix="${SYSROOT}${EPREFIX}"/usr
+	mozconfig_annotate '' --with-system-nss --with-nss-prefix="${SYSROOT}${EPREFIX}"/usr
+	mozconfig_annotate '' --x-includes="${SYSROOT}${EPREFIX}"/usr/include --x-libraries="${SYSROOT}${EPREFIX}"/usr/$(get_libdir)
 	if use system-libevent; then
-		mozconfig_annotate '' --with-system-libevent="${EPREFIX}"/usr
+		mozconfig_annotate '' --with-system-libevent="${SYSROOT}${EPREFIX}"/usr
 	fi
 	mozconfig_annotate '' --prefix="${EPREFIX}"/usr
 	mozconfig_annotate '' --libdir="${EPREFIX}"/usr/$(get_libdir)
@@ -285,7 +280,7 @@ mozconfig_config() {
 	mozconfig_annotate 'Gentoo default' --with-system-png
 	mozconfig_annotate '' --enable-system-ffi
 	mozconfig_annotate 'Gentoo default to honor system linker' --disable-gold
-	mozconfig_annotate 'Gentoo default' --disable-skia
+	mozconfig_use_enable skia
 	mozconfig_annotate '' --disable-gconf
 	mozconfig_annotate '' --with-intl-api
 
@@ -299,10 +294,10 @@ mozconfig_config() {
 		fi
 	fi
 	if [[ -n ${MOZCONFIG_OPTIONAL_GTK2ONLY} ]]; then
-		if ! use force-gtk2 ; then
+		if ! use gtk2 ; then
 			toolkit="cairo-gtk3"
 		else
-			toolkit_comment="force-gtk2 use flag"
+			toolkit_comment="gtk2 use flag"
 		fi
 	fi
 	if [[ -n ${MOZCONFIG_OPTIONAL_QT5} ]]; then
@@ -331,10 +326,15 @@ mozconfig_config() {
 		mozconfig_annotate '' --enable-replace-malloc
 	fi
 
-	mozconfig_annotate '' --target="${CTARGET:-${CHOST}}"
-	mozconfig_annotate '' --build="${CTARGET:-${CHOST}}"
+	# Instead of the standard --build= and --host=, mozilla uses --host instead
+	# of --build, and --target intstead of --host.
+	# Note, mozilla also has --build but it does not do what you think it does.
+	mozconfig_annotate '' --target="${CHOST}"
+	if [[ "${CBUILD:-${CHOST}}" != "${CHOST}" ]]; then
+		# set --host only when cross-compiling
+		mozconfig_annotate '' --host="${CBUILD:-${CHOST}}"
+	fi
 
-	use ffmpeg || mozconfig_annotate '-ffmpeg' --disable-ffmpeg
 	mozconfig_use_enable pulseaudio
 
 	mozconfig_use_enable system-cairo
@@ -399,6 +399,14 @@ mozconfig_install_prefs() {
 	# force the graphite pref if system-harfbuzz is enabled, since the pref cant disable it
 	if use system-harfbuzz ; then
 		echo "sticky_pref(\"gfx.font_rendering.graphite.enabled\",true);" \
+			>>"${prefs_file}" || die
+	fi
+
+	# force cairo as the canvas renderer if USE=skia is disabled
+	if ! use skia ; then
+		echo "lockPref(\"gfx.canvas.azure.backends\",\"cairo\");" \
+			>>"${prefs_file}" || die
+		echo "lockPref(\"gfx.content.azure.backends\",\"cairo\");" \
 			>>"${prefs_file}" || die
 	fi
 }
