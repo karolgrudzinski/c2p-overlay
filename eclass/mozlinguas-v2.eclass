@@ -128,7 +128,7 @@ MOZ_TOO_REGIONALIZED_FOR_L10N=( fy-NL ga-IE gu-IN hi-IN hy-AM nb-NO nn-NO pa-IN 
 # Add l10n_* to IUSE according to available language packs
 # No language packs for alphas and betas
 if ! [[ -n ${MOZ_GENERATE_LANGPACKS} ]] ; then
-	if ! [[ ${PV} =~ alpha|beta ]] || { [[ ${PN} == seamonkey ]] && ! [[ ${PV} =~ alpha ]] ; } || [[ -n ${MOZ_FORCE_UPSTREAM_L10N} ]] ; then
+	if ! [[ ${PV} =~ alpha ]] || { [[ ${PN} == seamonkey ]] && ! [[ ${PV} =~ alpha ]] ; } || [[ -n ${MOZ_FORCE_UPSTREAM_L10N} ]] ; then
 	[[ -z ${MOZ_FTP_URI} ]] && [[ -z ${MOZ_HTTP_URI} ]] && die "No URI set to download langpacks, please set one of MOZ_{FTP,HTTP}_URI"
 	for x in "${MOZ_LANGS[@]}" ; do
 		# en and en_US are handled internally
@@ -189,7 +189,7 @@ mozlinguas_export() {
 	if [[ ${PN} == seamonkey ]] ; then
 		[[ ${PV} =~ alpha ]] && ! [[ -n ${MOZ_GENERATE_LANGPACKS} ]] && return
 	else
-		[[ ${PV} =~ alpha|beta ]] && ! [[ -n ${MOZ_GENERATE_LANGPACKS} ]] && return
+		[[ ${PV} =~ alpha ]] && ! [[ -n ${MOZ_GENERATE_LANGPACKS} ]] && return
 	fi
 	local lingua lflag
 	mozlinguas=()
