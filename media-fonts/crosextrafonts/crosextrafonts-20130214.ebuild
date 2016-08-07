@@ -16,3 +16,4 @@ IUSE=""
 RESTRICT="binchecks strip test"
 
 FONT_SUFFIX="ttf"
+FONT_CONF=( "${FILESDIR}"/62-caladea.conf )
