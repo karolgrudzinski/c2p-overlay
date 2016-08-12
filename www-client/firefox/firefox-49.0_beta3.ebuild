@@ -365,6 +365,10 @@ pkg_postinst() {
 	# Update mimedb for the new .desktop file
 	fdo-mime_desktop_database_update
 	gnome2_icon_cache_update
+	if use widevine; then
+		einfo "Please read https://github.com/i-rinat/gmp-widevine/blob/master/how-to-enable-on-firefox-47.md"
+		einfo "for futher informations how to enable Widevine DRM support in Firefox"
+	fi
 }
 
 pkg_postrm() {

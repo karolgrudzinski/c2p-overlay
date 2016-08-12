@@ -84,7 +84,7 @@ inherit flag-o-matic toolchain-funcs mozcoreconf-v4
 
 # use-flags common among all mozilla ebuilds
 IUSE="${IUSE} dbus debug +jemalloc3 neon pulseaudio selinux +skia startup-notification system-cairo
-	system-harfbuzz system-icu system-jpeg system-libevent system-sqlite system-libvpx"
+	system-harfbuzz system-icu system-jpeg system-libevent system-sqlite system-libvpx widevine"
 
 # some notes on deps:
 # gtk:2 minimum is technically 2.10 but gio support (enabled by default) needs 2.14
@@ -344,6 +344,8 @@ mozconfig_config() {
 	mozconfig_use_with system-libvpx
 	mozconfig_use_with system-harfbuzz
 	mozconfig_use_with system-harfbuzz system-graphite2
+
+	use widevine && mozconfig_annotate '' --enable-eme=widevine
 
 	# Modifications to better support ARM, bug 553364
 	if use neon ; then
