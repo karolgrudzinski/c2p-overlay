@@ -81,12 +81,11 @@ diff -Naur firefox-50.0b2.orig/modules/libpref/prefread.cpp firefox-50.0b2/modul
 diff -Naur firefox-50.0b2.orig/modules/libpref/prefread.h firefox-50.0b2/modules/libpref/prefread.h
 --- firefox-50.0b2.orig/modules/libpref/prefread.h	2016-08-01 18:14:43.000000000 +0200
 +++ firefox-50.0b2/modules/libpref/prefread.h	2016-09-27 14:54:26.117125741 +0200
-@@ -34,7 +34,9 @@
+@@ -34,7 +34,8 @@
                             PrefValue   val,
                             PrefType    type,
                             bool        defPref,
 -                           bool        stickyPref);
-+                           bool        stickyPref,
 +                           bool        stickyPref,
 +                           bool        lockPref);
  
