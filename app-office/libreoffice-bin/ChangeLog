@@ -1,0 +1,221 @@
+# ChangeLog for app-office/libreoffice-bin
+# Copyright 1999-2016 Gentoo Foundation; Distributed under the GPL v2
+# (auto-generated from git log)
+
+*libreoffice-bin-4.4.4.3 (09 Aug 2015)
+
+  09 Aug 2015; Robin H. Johnson <robbat2@gentoo.org>
+  +files/50-libreoffice-bin, +libreoffice-bin-4.4.4.3.ebuild, +metadata.xml:
+  proj/gentoo: Initial commit
+
+  This commit represents a new era for Gentoo:
+  Storing the gentoo-x86 tree in Git, as converted from CVS.
+
+  This commit is the start of the NEW history.
+  Any historical data is intended to be grafted onto this point.
+
+  Creation process:
+  1. Take final CVS checkout snapshot
+  2. Remove ALL ChangeLog* files
+  3. Transform all Manifests to thin
+  4. Remove empty Manifests
+  5. Convert all stale $Header$/$Id$ CVS keywords to non-expanded Git $Id$
+  5.1. Do not touch files with -kb/-ko keyword flags.
+
+  Signed-off-by: Robin H. Johnson <robbat2@gentoo.org>
+  X-Thanks: Alec Warner <antarus@gentoo.org> - did the GSoC 2006 migration
+  tests
+  X-Thanks: Robin H. Johnson <robbat2@gentoo.org> - infra guy, herding this
+  project
+  X-Thanks: Nguyen Thai Ngoc Duy <pclouds@gentoo.org> - Former Gentoo
+  developer, wrote Git features for the migration
+  X-Thanks: Brian Harring <ferringb@gentoo.org> - wrote much python to improve
+  cvs2svn
+  X-Thanks: Rich Freeman <rich0@gentoo.org> - validation scripts
+  X-Thanks: Patrick Lauer <patrick@gentoo.org> - Gentoo dev, running new 2014
+  work in migration
+  X-Thanks: Michał Górny <mgorny@gentoo.org> - scripts, QA, nagging
+  X-Thanks: All of other Gentoo developers - many ideas and lots of paint on
+  the bikeshed
+
+  24 Aug 2015; Justin Lecher <jlec@gentoo.org> metadata.xml:
+  Use https by default
+
+  Convert all URLs for sites supporting encrypted connections from http to
+  https
+
+  Signed-off-by: Justin Lecher <jlec@gentoo.org>
+
+  24 Aug 2015; Mike Gilbert <floppym@gentoo.org> metadata.xml:
+  Revert DOCTYPE SYSTEM https changes in metadata.xml
+
+  repoman does not yet accept the https version.
+  This partially reverts eaaface92ee81f30a6ac66fe7acbcc42c00dc450.
+
+  Bug: https://bugs.gentoo.org/552720
+
+*libreoffice-bin-4.4.5.2 (02 Sep 2015)
+
+  02 Sep 2015; Andreas K. Huettel (dilfridge) <dilfridge@gentoo.org>
+  +libreoffice-bin-4.4.5.2.ebuild:
+  Version bump
+
+  Package-Manager: portage-2.2.20.1
+
+  05 Sep 2015; Agostino Sarubbo <ago@gentoo.org>
+  libreoffice-bin-4.4.5.2.ebuild:
+  amd64 stable wrt bug #559672
+
+  Package-Manager: portage-2.2.20.1
+  RepoMan-Options: --include-arches="amd64"
+
+  05 Sep 2015; Agostino Sarubbo <ago@gentoo.org>
+  libreoffice-bin-4.4.5.2.ebuild:
+  x86 stable wrt bug #559672
+
+  Package-Manager: portage-2.2.20.1
+  RepoMan-Options: --include-arches="x86"
+
+  26 Sep 2015; Andreas K. Huettel (dilfridge) <dilfridge@gentoo.org>
+  -libreoffice-bin-4.4.4.3.ebuild:
+  Remove old
+
+  Package-Manager: portage-2.2.20.1
+
+  27 Sep 2015; Andreas K. Huettel (dilfridge) <dilfridge@gentoo.org>
+  metadata.xml:
+  Rename openoffice herd to office herd in metadata
+
+*libreoffice-bin-5.0.3.2 (23 Nov 2015)
+
+  23 Nov 2015; Andreas K. Huettel (dilfridge) <dilfridge@gentoo.org>
+  +libreoffice-bin-5.0.3.2.ebuild:
+  Version bump
+
+  Package-Manager: portage-2.2.25
+
+  24 Nov 2015; Agostino Sarubbo <ago@gentoo.org>
+  libreoffice-bin-5.0.3.2.ebuild:
+  amd64 stable wrt bug #565026
+
+  Package-Manager: portage-2.2.20.1
+  RepoMan-Options: --include-arches="amd64"
+
+  24 Nov 2015; Agostino Sarubbo <ago@gentoo.org>
+  libreoffice-bin-5.0.3.2.ebuild:
+  x86 stable wrt bug #565026
+
+  Package-Manager: portage-2.2.20.1
+  RepoMan-Options: --include-arches="x86"
+
+  28 Nov 2015; Andreas K. Huettel (dilfridge) <dilfridge@gentoo.org>
+  -libreoffice-bin-4.4.5.2.ebuild:
+  Remove old
+
+  Package-Manager: portage-2.2.25
+
+  24 Jan 2016; Michał Górny <mgorny@gentoo.org> metadata.xml:
+  Replace all herds with appropriate projects (GLEP 67)
+
+  Replace all uses of herd with appropriate project maintainers, or no
+  maintainers in case of herds requested to be disbanded.
+
+  24 Jan 2016; Michał Górny <mgorny@gentoo.org> metadata.xml:
+  Set appropriate maintainer types in metadata.xml (GLEP 67)
+
+*libreoffice-bin-5.0.5.2 (28 Feb 2016)
+
+  28 Feb 2016; Andreas K. Hüttel <dilfridge@gentoo.org>
+  +libreoffice-bin-5.0.5.2.ebuild:
+  Version bump
+
+  Package-Manager: portage-2.2.27
+
+  29 Feb 2016; Andreas K. Hüttel <dilfridge@gentoo.org>
+  libreoffice-bin-5.0.3.2.ebuild, libreoffice-bin-5.0.5.2.ebuild:
+  Require at least GCC 4.9, bug 573962
+
+  Package-Manager: portage-2.2.27
+
+  02 Mar 2016; Agostino Sarubbo <ago@gentoo.org>
+  libreoffice-bin-5.0.5.2.ebuild:
+  amd64 stable wrt bug #575152
+
+  Package-Manager: portage-2.2.26
+  RepoMan-Options: --include-arches="amd64"
+  Signed-off-by: Agostino Sarubbo <ago@gentoo.org>
+
+  02 Mar 2016; Agostino Sarubbo <ago@gentoo.org>
+  libreoffice-bin-5.0.5.2.ebuild:
+  x86 stable wrt bug #575152
+
+  Package-Manager: portage-2.2.26
+  RepoMan-Options: --include-arches="x86"
+  Signed-off-by: Agostino Sarubbo <ago@gentoo.org>
+
+*libreoffice-bin-5.0.5.2-r1 (03 Mar 2016)
+
+  03 Mar 2016; Andreas K. Hüttel <dilfridge@gentoo.org>
+  -libreoffice-bin-5.0.5.2.ebuild, +libreoffice-bin-5.0.5.2-r1.ebuild:
+  Revbump to relax graphite2 dependencies
+
+  Package-Manager: portage-2.2.27
+
+  03 Mar 2016; Andreas K. Hüttel <dilfridge@gentoo.org>
+  -libreoffice-bin-5.0.3.2.ebuild:
+  Remove old
+
+  Package-Manager: portage-2.2.27
+
+*libreoffice-bin-5.1.2.2 (20 Apr 2016)
+
+  20 Apr 2016; Andreas K. Hüttel <dilfridge@gentoo.org>
+  +libreoffice-bin-5.1.2.2.ebuild:
+  Version bump
+
+  Package-Manager: portage-2.2.28
+
+*libreoffice-bin-5.1.2.2-r1 (22 Apr 2016)
+
+  22 Apr 2016; Andreas K. Hüttel <dilfridge@gentoo.org>
+  -libreoffice-bin-5.1.2.2.ebuild, +libreoffice-bin-5.1.2.2-r1.ebuild:
+  Revision bump, rebuild on amd64 to fix bug 580756
+
+  Package-Manager: portage-2.2.28
+
+  07 May 2016; Pacho Ramos <pacho@gentoo.org>
+  libreoffice-bin-5.1.2.2-r1.ebuild:
+  amd64 stable, bug #580672
+
+  Package-Manager: portage-2.2.28
+
+*libreoffice-bin-5.1.4.2 (20 Jul 2016)
+
+  20 Jul 2016; Andreas K. Hüttel <dilfridge@gentoo.org>
+  +libreoffice-bin-5.1.4.2.ebuild:
+  Version bump
+
+  Package-Manager: portage-2.3.0
+
+  28 Jul 2016; Agostino Sarubbo <ago@gentoo.org>
+  libreoffice-bin-5.1.4.2.ebuild:
+  amd64 stable wrt bug #589284
+
+  Package-Manager: portage-2.2.28
+  RepoMan-Options: --include-arches="amd64"
+  Signed-off-by: Agostino Sarubbo <ago@gentoo.org>
+
+  28 Jul 2016; Agostino Sarubbo <ago@gentoo.org>
+  libreoffice-bin-5.1.4.2.ebuild:
+  x86 stable wrt bug #589284
+
+  Package-Manager: portage-2.2.28
+  RepoMan-Options: --include-arches="x86"
+  Signed-off-by: Agostino Sarubbo <ago@gentoo.org>
+
+  28 Jul 2016; Andreas K. Huettel <dilfridge@gentoo.org>
+  -libreoffice-bin-5.0.5.2-r1.ebuild, -libreoffice-bin-5.1.2.2-r1.ebuild:
+  Remove old
+
+  Package-Manager: portage-2.3.0
+
