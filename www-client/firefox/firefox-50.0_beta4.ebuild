@@ -116,7 +116,7 @@ src_unpack() {
 src_prepare() {
 	rm "${WORKDIR}"/firefox/5001_allow_locked_prefs_v4.patch
 	rm "${WORKDIR}"/firefox/8009_system_harfbuzz_graphite2_bug847568_v3.patch
-	
+
 	# Apply our patches
 	eapply "${WORKDIR}/firefox" \
 		"${FILESDIR}"/${PN}-48.0-pgo.patch \
