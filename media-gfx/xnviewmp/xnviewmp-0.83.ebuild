@@ -8,8 +8,8 @@ inherit eutils fdo-mime
 
 DESCRIPTION="XnView MP image viewer/converter"
 HOMEPAGE="http://www.xnview.com/"
-SRC_URI="x86? ( http://download.xnview.com/old_versions/XnViewMP-081-linux.tgz )
-	   amd64? ( http://download.xnview.com/old_versions/XnViewMP-081-linux-x64.tgz )"
+SRC_URI="x86? ( http://download.xnview.com/old_versions/XnViewMP-083-linux.tgz )
+	   amd64? ( http://download.xnview.com/old_versions/XnViewMP-083-linux-x64.tgz )"
 
 SLOT="0"
 LICENSE="freedist XnView"

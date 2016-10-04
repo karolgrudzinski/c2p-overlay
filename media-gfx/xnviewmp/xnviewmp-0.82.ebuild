@@ -1,4 +1,4 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -12,7 +12,7 @@ SRC_URI="x86? ( http://download.xnview.com/old_versions/XnViewMP-082-linux.tgz )
 	   amd64? ( http://download.xnview.com/old_versions/XnViewMP-082-linux-x64.tgz )"
 
 SLOT="0"
-LICENSE="free-noncomm as-is"
+LICENSE="freedist XnView"
 KEYWORDS="~x86 ~amd64"
 IUSE="bundled-libs"
 
@@ -100,6 +100,6 @@ src_install() {
 }
 
 pkg_postinst(){
-    fdo-mime_desktop_database_update
-    fdo-mime_mime_database_update
+	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
 }
