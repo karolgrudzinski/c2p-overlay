@@ -57,8 +57,9 @@ src_install() {
 	dosym "${progdir}"/program/soffice /usr/bin/libreoffice"${MY_PV2}"
 
 	rm ./usr/share/applications/*
+	mkdir -p "${ED}"/usr/share/applications
 	for prog in base impress startcenter calc math writer draw xsltfilter; do
-		dosym "${progdir}"/share/xdg/"${prog}".desktop /usr/share/applications/libreoffice"${MY_PV2}"-"${prog}".desktop
+		cp "${progdir}"/share/xdg/"${prog}".desktop "${ED}"/usr/share/applications/libreoffice"${MY_PV2}"-"${prog}".desktop
 	done
 
 	doins -r usr
