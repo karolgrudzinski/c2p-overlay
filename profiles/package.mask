@@ -1,6 +1,7 @@
 # This is official RPM version of LibreOffice. This is different
 # from libreoffice-bin version provided bygentoo.
 app-office/libreoffice-bin
+app-office/libreoffice-l10n
 
 # Version from this overlay doesn't check java support in LibreOffice
 app-officeext/languagetool
