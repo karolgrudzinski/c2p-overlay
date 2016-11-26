@@ -12,7 +12,7 @@ HOMEPAGE="http://www.libreoffice.org"
 MY_PV2=$(get_version_component_range 1-2)
 MY_PV3=$(get_version_component_range 1-3)
 
-SRC_URI_BASE="https://download.documentfoundation.org/libreoffice/stable"
+SRC_URI_BASE="http://download.documentfoundation.org/libreoffice/stable"
 SRC_URI_AMD64="${SRC_URI_BASE}/${MY_PV3}/rpm/x86_64/LibreOffice_${MY_PV3}_Linux_x86-64_rpm.tar.gz"
 SRC_URI_X86="${SRC_URI_BASE}/${MY_PV3}/rpm/x86/LibreOffice_${MY_PV3}_Linux_x86_rpm.tar.gz"
 
