@@ -122,6 +122,7 @@ src_prepare() {
 
 	eapply "${FILESDIR}"/7000_drop-Wl-build-id_v5_ff51b1.patch
 	eapply "${FILESDIR}"/8009_system_harfbuzz_graphite2_bug847568_v4_ff51b1.patch
+    eapply "${FILESDIR}"/gcc6-fix-lto-partition-flag.patch
 
 	# Apply our patches
 	eapply "${WORKDIR}/firefox" \
