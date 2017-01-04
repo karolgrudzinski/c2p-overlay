@@ -52,7 +52,7 @@ SRC_URI="${SRC_URI}
 ASM_DEPEND=">=dev-lang/yasm-1.1"
 
 RDEPEND="
-	>=dev-libs/nss-3.26.2
+	>=dev-libs/nss-3.28
 	>=dev-libs/nspr-4.12
 	selinux? ( sec-policy/selinux-mozilla )"
 
