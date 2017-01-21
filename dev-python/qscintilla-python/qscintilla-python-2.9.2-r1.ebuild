@@ -27,14 +27,14 @@ DEPEND="
 		>=dev-python/PyQt4-4.11.3[X,${PYTHON_USEDEP}]
 		dev-qt/qtcore:4
 		dev-qt/qtgui:4
-		~x11-libs/qscintilla-${PV}:=[qt4(-)]
+		~x11-libs/qscintilla-${PV}:=[qt4(+)]
 	)
 	qt5? (
 		>=dev-python/sip-4.18:=[${PYTHON_USEDEP}]
 		>=dev-python/PyQt5-5.5.1[${PYTHON_USEDEP}]
 		dev-qt/qtcore:5
 		dev-qt/qtgui:5
-		~x11-libs/qscintilla-${PV}:=[qt5(-)]
+		~x11-libs/qscintilla-${PV}:=[qt5(+)]
 	)
 "
 RDEPEND="${DEPEND}"
