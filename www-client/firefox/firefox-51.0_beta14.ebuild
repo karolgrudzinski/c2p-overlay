@@ -25,7 +25,7 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-51.0-patches-03"
+PATCH="${PN}-51.0-patches-05"
 MOZ_HTTP_URI="https://archive.mozilla.org/pub/${PN}/releases"
 
 MOZCONFIG_OPTIONAL_GTK2ONLY=1
@@ -41,8 +41,8 @@ KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-lin
 
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
-IUSE="bindist hardened +hwaccel jack pgo selinux +gmp-autoupdate test"
-RESTRICT="!bindist? ( bindist ) mirror"
+IUSE="bindist +gmp-autoupdate hardened hwaccel jack pgo rust selinux test"
+RESTRICT="!bindist? ( bindist )"
 
 PATCH_URIS=( https://dev.gentoo.org/~{anarchy,axs,polynomial-c}/mozilla/patchsets/${PATCH}.tar.xz )
 SRC_URI="${SRC_URI}
@@ -55,11 +55,13 @@ RDEPEND="
 	jack? ( virtual/jack )
 	>=dev-libs/nss-3.28.1
 	>=dev-libs/nspr-4.13.1
+	>=media-libs/libpng-1.6.25
 	system-sqlite? ( >=dev-db/sqlite-3.14.1:3[secure-delete,debug=] )
 	selinux? ( sec-policy/selinux-mozilla )"
 
 DEPEND="${RDEPEND}
 	pgo? ( >=sys-devel/gcc-4.5 )
+	rust? ( dev-lang/rust )
 	amd64? ( ${ASM_DEPEND} virtual/opengl )
 	x86? ( ${ASM_DEPEND} virtual/opengl )"
 
@@ -68,11 +70,6 @@ S="${WORKDIR}/firefox-${MOZ_PV}"
 QA_PRESTRIPPED="usr/lib*/${PN}/firefox"
 
 BUILD_OBJ_DIR="${S}/ff"
-
-# dependencies newer than specified in the eclass
-RDEPEND="${RDEPEND}
-	>=media-libs/libpng-1.6.23
-	"
 
 pkg_setup() {
 	moz_pkgsetup
@@ -99,6 +96,11 @@ pkg_setup() {
 		ewarn "You will do a double build for profile guided optimization."
 		ewarn "This will result in your build taking at least twice as long as before."
 	fi
+
+	if use rust; then
+		einfo
+		ewarn "This is very experimental, should only be used by those developing firefox."
+	fi
 }
 
 pkg_pretend() {
@@ -121,11 +123,8 @@ src_unpack() {
 src_prepare() {
 	eapply "${FILESDIR}"/gcc6-fix-lto-partition-flag.patch
 
-	rm "${WORKDIR}/firefox"/2003_mozilla-configure-regexp.patch
-
 	# Apply our patches
-	eapply "${WORKDIR}/firefox" \
-		"${FILESDIR}"/${PN}-48.0-pgo.patch
+	eapply "${WORKDIR}/firefox"
 
 	# Enable gnomebreakpad
 	if use debug ; then
@@ -219,6 +218,8 @@ src_configure() {
 
 	mozconfig_annotate '' --enable-extensions="${MEXTENSIONS}"
 
+	mozconfig_use_enable rust
+
 	# Allow for a proper pgo build
 	if use pgo; then
 		echo "mk_add_options PROFILE_GEN_SCRIPT='EXTRA_TEST_ARGS=10 \$(MAKE) -C \$(MOZ_OBJDIR) pgo-profile-run'" >> "${S}"/.mozconfig
@@ -259,7 +260,7 @@ src_compile() {
 			fi
 		fi
 		shopt -u nullglob
-		addpredict "${cards}"
+		[[ -n "${cards}" ]] && addpredict "${cards}"
 
 		MOZ_MAKE_FLAGS="${MAKEOPTS}" SHELL="${SHELL:-${EPREFIX%/}/bin/bash}" \
 		virtx emake -f client.mk profiledbuild || die "virtx emake failed"
