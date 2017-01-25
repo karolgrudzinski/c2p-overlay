@@ -42,10 +42,10 @@ inherit flag-o-matic toolchain-funcs mozcoreconf-v4
 # @ECLASS-VARIABLE: MOZCONFIG_OPTIONAL_JIT
 # @DESCRIPTION:
 # Set this variable before the inherit line, when an ebuild needs to provide
-# optional necko-wifi support via IUSE="jit".  Currently this would include
-# ebuilds for firefox, and potentially seamonkey.
+# deterministic jit support via IUSE="jit".  The upstream default will be used
+# otherwise, which is generally to enable jit unless support for the platform
+# is missing.
 #
-# Leave the variable UNSET if optional jit support should not be available.
 # Set the variable to "enabled" if the use flag should be enabled by default.
 # Set the variable to any value if the use flag should exist but not be default-enabled.
 
@@ -96,7 +96,7 @@ RDEPEND=">=app-text/hunspell-1.2:=
 	>=x11-libs/cairo-1.10[X]
 	x11-libs/gdk-pixbuf
 	>=x11-libs/pango-1.22.0
-	>=media-libs/libpng-1.6.21:0=[apng]
+	>=media-libs/libpng-1.6.25:0=[apng]
 	>=media-libs/mesa-10.2:*
 	media-libs/fontconfig
 	>=media-libs/freetype-2.4.10
@@ -121,7 +121,7 @@ RDEPEND=">=app-text/hunspell-1.2:=
 	system-icu? ( >=dev-libs/icu-56.1:= )
 	system-jpeg? ( >=media-libs/libjpeg-turbo-1.2.1 )
 	system-libevent? ( =dev-libs/libevent-2.0*:0= )
-	system-sqlite? ( >=dev-db/sqlite-3.13.0:3[secure-delete,debug=] )
+	system-sqlite? ( >=dev-db/sqlite-3.14.1:3[secure-delete,debug=] )
 	system-libvpx? ( >=media-libs/libvpx-1.5.0:0=[postproc] )
 	system-harfbuzz? ( >=media-libs/harfbuzz-1.2.6:0=[graphite,icu] >=media-gfx/graphite2-1.3.8 )
 "

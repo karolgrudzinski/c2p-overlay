@@ -30,9 +30,8 @@ MOZ_HTTP_URI="https://archive.mozilla.org/pub/${PN}/releases"
 
 MOZCONFIG_OPTIONAL_GTK2ONLY=1
 MOZCONFIG_OPTIONAL_WIFI=1
-MOZCONFIG_OPTIONAL_JIT="enabled"
 
-inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.49 pax-utils fdo-mime autotools virtualx mozlinguas-v2
+inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.51 pax-utils fdo-mime autotools virtualx mozlinguas-v2
 
 DESCRIPTION="Firefox Web Browser"
 HOMEPAGE="http://www.mozilla.com/firefox"
@@ -70,6 +69,12 @@ S="${WORKDIR}/firefox-${MOZ_PV}"
 QA_PRESTRIPPED="usr/lib*/${PN}/firefox"
 
 BUILD_OBJ_DIR="${S}/ff"
+
+# allow GMP_PLUGIN_LIST to be set in an eclass or
+# overridden in the enviromnent (advanced hackers only)
+if [[ -z $GMP_PLUGIN_LIST ]]; then
+	GMP_PLUGIN_LIST=( gmp-gmpopenh264 gmp-widevinecdm )
+fi
 
 pkg_setup() {
 	moz_pkgsetup
@@ -297,8 +302,7 @@ src_install() {
 		|| die
 
 	local plugin
-	use gmp-autoupdate || for plugin in \
-	gmp-gmpopenh264 ; do
+	use gmp-autoupdate || for plugin in "${GMP_PLUGIN_LIST[@]}" ; do
 		echo "pref(\"media.${plugin}.autoupdate\", false);" >> \
 			"${BUILD_OBJ_DIR}/dist/bin/browser/defaults/preferences/all-gentoo.js" \
 			|| die
@@ -357,18 +361,8 @@ PROFILE_EOF
 			|| die
 	fi
 
-	# Required in order to use plugins and even run firefox on hardened, with jit useflag.
-	if use jit; then
-		pax-mark m "${ED}"${MOZILLA_FIVE_HOME}/{firefox,firefox-bin,plugin-container}
-	else
-		pax-mark m "${ED}"${MOZILLA_FIVE_HOME}/plugin-container
-	fi
-
-	# very ugly hack to make firefox not sigbus on sparc
-	# FIXME: is this still needed??
-	use sparc && { sed -e 's/Firefox/FirefoxGentoo/g' \
-					 -i "${ED}/${MOZILLA_FIVE_HOME}/application.ini" \
-					|| die "sparc sed failed"; }
+	# Required in order to use plugins and even run firefox on hardened.
+	pax-mark m "${ED}"${MOZILLA_FIVE_HOME}/{firefox,firefox-bin,plugin-container}
 }
 
 pkg_preinst() {
@@ -379,6 +373,13 @@ pkg_postinst() {
 	# Update mimedb for the new .desktop file
 	fdo-mime_desktop_database_update
 	gnome2_icon_cache_update
+
+	if ! use gmp-autoupdate ; then
+		elog "USE='-gmp-autoupdate' has disabled the following plugins from updating or"
+		elog "installing into new profiles:"
+		local plugin
+		for plugin in "${GMP_PLUGIN_LIST[@]}"; do elog "\t ${plugin}" ; done
+	fi
 }
 
 pkg_postrm() {
