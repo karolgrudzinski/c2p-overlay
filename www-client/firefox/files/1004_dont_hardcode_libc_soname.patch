@@ -1,0 +1,40 @@
+diff --git a/testing/mochitest/runtests.py b/testing/mochitest/runtests.py
+index 22cc423..3122ece 100644
+--- a/testing/mochitest/runtests.py
++++ b/testing/mochitest/runtests.py
+@@ -13,7 +13,7 @@ SCRIPT_DIR = os.path.abspath(os.path.realpath(os.path.dirname(__file__)))
+ sys.path.insert(0, SCRIPT_DIR)
+ 
+ from argparse import Namespace
+-import ctypes
++import ctypes.util
+ import glob
+ import json
+ import mozcrash
+@@ -627,7 +627,7 @@ def checkAndConfigureV4l2loopback(device):
+     if not mozinfo.isLinux:
+         return False, ''
+ 
+-    libc = ctypes.cdll.LoadLibrary('libc.so.6')
++    libc = ctypes.cdll.LoadLibrary(ctypes.util.find_library('c'))
+     O_RDWR = 2
+     # These are from linux/videodev2.h
+ 
+diff --git a/testing/mozbase/mozinfo/mozinfo/mozinfo.py b/testing/mozbase/mozinfo/mozinfo/mozinfo.py
+index 81a3030..bd350d5 100755
+--- a/testing/mozbase/mozinfo/mozinfo/mozinfo.py
++++ b/testing/mozbase/mozinfo/mozinfo/mozinfo.py
+@@ -146,11 +146,11 @@ info.update({'processor': processor,
+              })
+ 
+ if info['os'] == 'linux':
+-    import ctypes
++    import ctypes.util
+     import errno
+     PR_SET_SECCOMP = 22
+     SECCOMP_MODE_FILTER = 2
+-    ctypes.CDLL("libc.so.6", use_errno=True).prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, 0)
++    ctypes.CDLL(ctypes.util.find_library('c'), use_errno=True).prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, 0)
+     info['has_sandbox'] = ctypes.get_errno() == errno.EFAULT
+ else:
+     info['has_sandbox'] = True
