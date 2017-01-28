@@ -25,7 +25,7 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-51.0-patches-05"
+PATCH="${PN}-52.0-patches-03"
 MOZ_HTTP_URI="https://archive.mozilla.org/pub/${PN}/releases"
 
 MOZCONFIG_OPTIONAL_GTK2ONLY=1
@@ -41,7 +41,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-lin
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
 IUSE="bindist +gmp-autoupdate hardened hwaccel jack pgo rust selinux test"
-RESTRICT="!bindist? ( bindist ) mirror"
+RESTRICT="!bindist? ( bindist )"
 
 PATCH_URIS=( https://dev.gentoo.org/~{anarchy,axs,polynomial-c}/mozilla/patchsets/${PATCH}.tar.xz )
 SRC_URI="${SRC_URI}
@@ -129,12 +129,7 @@ src_prepare() {
 	eapply "${FILESDIR}"/gcc6-fix-lto-partition-flag.patch
 
 	# Apply our patches
-	rm "${WORKDIR}"/firefox/1004_dont_hardcode_libc_soname.patch
-	rm "${WORKDIR}"/firefox/2001_system_harfbuzz_graphite2.patch
-	rm "${WORKDIR}"/firefox/2002_binutils_26_bfd.patch
 	eapply "${WORKDIR}/firefox"
-	eapply "${FILESDIR}"/1004_dont_hardcode_libc_soname.patch
-	eapply "${FILESDIR}"/2001_system_harfbuzz_graphite2.patch
 
 	# Enable gnomebreakpad
 	if use debug ; then
@@ -313,7 +308,7 @@ src_install() {
 			|| die
 	done
 
-	MOZ_MAKE_FLAGS="${MAKEOPTS}" \
+	MOZ_MAKE_FLAGS="${MAKEOPTS}" SHELL="${SHELL:-${EPREFIX%/}/bin/bash}" \
 	emake DESTDIR="${D}" install
 
 	# Install language packs
