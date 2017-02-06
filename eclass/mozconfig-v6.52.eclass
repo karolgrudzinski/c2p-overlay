@@ -42,10 +42,10 @@ inherit flag-o-matic toolchain-funcs mozcoreconf-v4
 # @ECLASS-VARIABLE: MOZCONFIG_OPTIONAL_JIT
 # @DESCRIPTION:
 # Set this variable before the inherit line, when an ebuild needs to provide
-# optional necko-wifi support via IUSE="jit".  Currently this would include
-# ebuilds for firefox, and potentially seamonkey.
+# deterministic jit support via IUSE="jit".  The upstream default will be used
+# otherwise, which is generally to enable jit unless support for the platform
+# is missing.
 #
-# Leave the variable UNSET if optional jit support should not be available.
 # Set the variable to "enabled" if the use flag should be enabled by default.
 # Set the variable to any value if the use flag should exist but not be default-enabled.
 
@@ -83,7 +83,7 @@ inherit flag-o-matic toolchain-funcs mozcoreconf-v4
 # Set the variable to any value if the use flag should exist but not be default-enabled.
 
 # use-flags common among all mozilla ebuilds
-IUSE="${IUSE} dbus debug +jemalloc neon pulseaudio selinux +skia startup-notification system-cairo
+IUSE="${IUSE} dbus debug +jemalloc neon pulseaudio selinux startup-notification system-cairo
 	system-harfbuzz system-icu system-jpeg system-libevent system-sqlite system-libvpx"
 
 # some notes on deps:
@@ -96,7 +96,7 @@ RDEPEND=">=app-text/hunspell-1.2:=
 	>=x11-libs/cairo-1.10[X]
 	x11-libs/gdk-pixbuf
 	>=x11-libs/pango-1.22.0
-	>=media-libs/libpng-1.6.21:0=[apng]
+	>=media-libs/libpng-1.6.25:0=[apng]
 	>=media-libs/mesa-10.2:*
 	media-libs/fontconfig
 	>=media-libs/freetype-2.4.10
@@ -120,8 +120,8 @@ RDEPEND=">=app-text/hunspell-1.2:=
 	system-cairo? ( >=x11-libs/cairo-1.12[X,xcb] >=x11-libs/pixman-0.19.2 )
 	system-icu? ( >=dev-libs/icu-56.1:= )
 	system-jpeg? ( >=media-libs/libjpeg-turbo-1.2.1 )
-	system-libevent? ( =dev-libs/libevent-2.0*:0= )
-	system-sqlite? ( >=dev-db/sqlite-3.13.0:3[secure-delete,debug=] )
+	system-libevent? ( >=dev-libs/libevent-2.0:0= )
+	system-sqlite? ( >=dev-db/sqlite-3.14.1:3[secure-delete,debug=] )
 	system-libvpx? ( >=media-libs/libvpx-1.5.0:0=[postproc] )
 	system-harfbuzz? ( >=media-libs/harfbuzz-1.2.6:0=[graphite,icu] >=media-gfx/graphite2-1.3.8 )
 "
@@ -149,24 +149,6 @@ else
 	RDEPEND+="
 		>=x11-libs/gtk+-2.18:2"
 fi
-if [[ -n ${MOZCONFIG_OPTIONAL_QT5} ]]; then
-	inherit qmake-utils
-	if [[ ${MOZCONFIG_OPTIONAL_QT5} = "enabled" ]]; then
-		IUSE+=" +qt5"
-	else
-		IUSE+=" qt5"
-	fi
-	RDEPEND+="
-	qt5? (
-		dev-qt/qtcore:5
-		dev-qt/qtgui:5
-		dev-qt/qtnetwork:5
-		dev-qt/qtprintsupport:5
-		dev-qt/qtwidgets:5
-		dev-qt/qtxml:5
-		dev-qt/qtdeclarative:5
-	)"
-fi
 if [[ -n ${MOZCONFIG_OPTIONAL_WIFI} ]]; then
 	if [[ ${MOZCONFIG_OPTIONAL_WIFI} = "enabled" ]]; then
 		IUSE+=" +wifi"
@@ -179,13 +161,6 @@ if [[ -n ${MOZCONFIG_OPTIONAL_WIFI} ]]; then
 			>=dev-libs/dbus-glib-0.72
 			net-misc/networkmanager )
 	)"
-fi
-if [[ -n ${MOZCONFIG_OPTIONAL_JIT} ]]; then
-	if [[ ${MOZCONFIG_OPTIONAL_JIT} = "enabled" ]]; then
-		IUSE+=" +jit"
-	else
-		IUSE+=" jit"
-	fi
 fi
 
 DEPEND="app-arch/zip
@@ -200,14 +175,6 @@ RDEPEND+="
 # force system-icu if system-harfbuzz is selected, to avoid potential ABI issues
 REQUIRED_USE="
 	system-harfbuzz? ( system-icu )"
-
-# only one of gtk3 or qt5 should be permitted to be selected, since only one will be used.
-[[ -n ${MOZCONFIG_OPTIONAL_GTK3} ]] && [[ -n ${MOZCONFIG_OPTIONAL_QT5} ]] && \
-	REQUIRED_USE+=" ?? ( gtk3 qt5 )"
-
-# only one of gtk2 or qt5 should be permitted to be selected, since only one will be used.
-[[ -n ${MOZCONFIG_OPTIONAL_GTK2ONLY} ]] && [[ -n ${MOZCONFIG_OPTIONAL_QT5} ]] && \
-	REQUIRED_USE+=" ?? ( gtk2 qt5 )"
 
 # @FUNCTION: mozconfig_config
 # @DESCRIPTION:
@@ -286,7 +253,7 @@ mozconfig_config() {
 	mozconfig_annotate 'Gentoo default' --with-system-png
 	mozconfig_annotate '' --enable-system-ffi
 	mozconfig_annotate 'Gentoo default to honor system linker' --disable-gold
-	mozconfig_use_enable skia
+	mozconfig_annotate '' --enable-skia
 	mozconfig_annotate '' --disable-gconf
 	mozconfig_annotate '' --with-intl-api
 
@@ -402,14 +369,6 @@ mozconfig_install_prefs() {
 	# force the graphite pref if system-harfbuzz is enabled, since the pref cant disable it
 	if use system-harfbuzz ; then
 		echo "sticky_pref(\"gfx.font_rendering.graphite.enabled\",true);" \
-			>>"${prefs_file}" || die
-	fi
-
-	# force cairo as the canvas renderer if USE=skia is disabled
-	if ! use skia ; then
-		echo "lockPref(\"gfx.canvas.azure.backends\",\"cairo\");" \
-			>>"${prefs_file}" || die
-		echo "lockPref(\"gfx.content.azure.backends\",\"cairo\");" \
 			>>"${prefs_file}" || die
 	fi
 }
