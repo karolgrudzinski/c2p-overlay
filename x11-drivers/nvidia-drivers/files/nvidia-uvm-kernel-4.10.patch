@@ -1,0 +1,11 @@
+--- work.orig/kernel/uvm/nvidia_uvm_lite.c	2017-01-16 21:15:32.000000000 +0100
++++ work/kernel/uvm/nvidia_uvm_lite.c	2017-03-01 22:03:00.990449349 +0100
+@@ -820,7 +820,7 @@
+ #if defined(NV_VM_OPERATIONS_STRUCT_HAS_FAULT)
+ int _fault(struct vm_area_struct *vma, struct vm_fault *vmf)
+ {
+-    unsigned long vaddr = (unsigned long)vmf->virtual_address;
++    unsigned long vaddr = (unsigned long)vmf->address;
+     struct page *page = NULL;
+     int retval;
+ 
