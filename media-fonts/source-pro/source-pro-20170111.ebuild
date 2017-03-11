@@ -4,9 +4,9 @@
 EAPI=6
 inherit font
 
-SANSV="2.020R-ro/1.075R-it"
-SERIFV="1.017R"
-CODEV="2.030R-ro/1.050R-it"
+SANSV="2.020R-ro/1.075R-it" # 2015-09-16
+SERIFV="2.000R"             # 2017-01-11
+CODEV="2.030R-ro/1.050R-it" # 2016-07-19
 
 DESCRIPTION="Adobe's open source typeface family designed for UI environments"
 HOMEPAGE="http://adobe-fonts.github.io/source-sans-pro
