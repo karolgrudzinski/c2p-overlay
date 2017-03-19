@@ -1,6 +1,5 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 
@@ -8,8 +7,8 @@ inherit eutils fdo-mime
 
 DESCRIPTION="XnView MP image viewer/converter"
 HOMEPAGE="http://www.xnview.com/"
-SRC_URI="x86? ( http://download.xnview.com/old_versions/XnViewMP-079-linux.tgz )
-	   amd64? ( http://download.xnview.com/old_versions/XnViewMP-079-linux-x64.tgz )"
+SRC_URI="x86? ( http://download.xnview.com/old_versions/XnViewMP-082-linux.tgz )
+	   amd64? ( http://download.xnview.com/old_versions/XnViewMP-082-linux-x64.tgz )"
 
 SLOT="0"
 LICENSE="freedist XnView"

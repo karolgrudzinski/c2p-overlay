@@ -1,6 +1,5 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI="5"
 
@@ -33,10 +32,12 @@ src_unpack() {
 }
 
 src_install() {
-	java-pkg_dojar "${S}/${P}"/lib/*
-	java-pkg_dojar "${S}/${P}"/${PN}.jar
-	java-pkg_dolauncher yed --jar ${PN}.jar
-	doicon "${S}/${P}/icons/yicon32.png"
+	MY_P=${P,,}
+	MY_PN=${PN,,}
+	java-pkg_dojar "${S}/${MY_P}"/lib/*
+	java-pkg_dojar "${S}/${MY_P}"/${MY_PN}.jar
+	java-pkg_dolauncher yEd --jar ${MY_PN}.jar
+	doicon "${S}/${MY_P}/icons/yicon32.png"
 	make_desktop_entry ${PN} "yEd Graph Editor" yicon32 "Graphics;2DGraphics"
-	dodoc "${S}/${P}"/license.html
+	dodoc "${S}/${MY_P}"/license.html
 }
