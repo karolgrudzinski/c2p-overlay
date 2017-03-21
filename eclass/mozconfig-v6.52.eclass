@@ -1,6 +1,5 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 #
 # @ECLASS: mozconfig-v6.52.eclass
 # @MAINTAINER:
@@ -123,7 +122,7 @@ RDEPEND=">=app-text/hunspell-1.2:=
 	system-libevent? ( >=dev-libs/libevent-2.0:0= )
 	system-sqlite? ( >=dev-db/sqlite-3.17.0:3[secure-delete,debug=] )
 	system-libvpx? ( >=media-libs/libvpx-1.5.0:0=[postproc] )
-	system-harfbuzz? ( >=media-libs/harfbuzz-1.3.3:0=[icu] >=media-gfx/graphite2-1.3.8 )
+	system-harfbuzz? ( >=media-libs/harfbuzz-1.3.3:0= >=media-gfx/graphite2-1.3.8 )
 "
 
 if [[ -n ${MOZCONFIG_OPTIONAL_GTK3} ]]; then
@@ -171,10 +170,6 @@ DEPEND="app-arch/zip
 
 RDEPEND+="
 	selinux? ( sec-policy/selinux-mozilla )"
-
-# force system-icu if system-harfbuzz is selected, to avoid potential ABI issues
-REQUIRED_USE="
-	system-harfbuzz? ( system-icu )"
 
 # @FUNCTION: mozconfig_config
 # @DESCRIPTION:
