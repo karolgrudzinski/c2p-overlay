@@ -1,6 +1,5 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=5
 
@@ -176,13 +175,13 @@ src_prepare() {
 		fi
 		if kernel_is ge 4 0; then
 			epatch "${FILESDIR}"/linux-4.0.patch
-		fi  
+		fi
 		if kernel_is ge 4 3; then
 			epatch "${FILESDIR}"/linux-4.3-void-seq_printf.patch
 			epatch "${FILESDIR}"/linux-4.3-void-seq_puts.patch
-		fi  
+		fi
 	fi
-	
+
 	# Allow user patches so they can support RC kernels and whatever else
 	epatch_user
 }
