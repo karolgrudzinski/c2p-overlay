@@ -3,7 +3,7 @@
 
 EAPI=6
 
-inherit pax-utils prefix versionator rpm fdo-mime
+inherit pax-utils prefix versionator rpm fdo-mime gnome2-utils
 
 DESCRIPTION="A full office productivity suite. Binary package"
 HOMEPAGE="http://www.libreoffice.org"
@@ -77,9 +77,11 @@ pkg_postinst() {
 	pax-mark -m "${EPREFIX}"/usr/$(get_libdir)/libreoffice/program/unopkg.bin
 	fdo-mime_desktop_database_update
 	fdo-mime_mime_database_update
+	gnome2_icon_cache_update
 }
 
 pkg_postrm() {
 	fdo-mime_desktop_database_update
 	fdo-mime_mime_database_update
+	gnome2_icon_cache_update
 }
