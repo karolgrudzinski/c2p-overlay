@@ -1,10 +1,9 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 
-inherit pax-utils prefix versionator rpm
+inherit pax-utils prefix versionator rpm fdo-mime
 
 DESCRIPTION="A full office productivity suite. Binary package"
 HOMEPAGE="http://www.libreoffice.org"
@@ -51,15 +50,21 @@ src_prepare() {
 src_install() {
 	local progdir=/usr/$(get_libdir)/libreoffice
 	dodir ${progdir}
-	cp -aR "${S}"/opt/libreoffice"${MY_PV2}"/* "${ED}"/"${progdir}"/
+	mv "${S}"/opt/libreoffice"${MY_PV2}"/* "${ED}"/"${progdir}"/
 
 	rm ./usr/bin/libreoffice"${MY_PV2}"
 	dosym "${progdir}"/program/soffice /usr/bin/libreoffice"${MY_PV2}"
+	dosym "${progdir}"/program/soffice /usr/bin/libreoffice
+	dosym "${progdir}"/program/soffice /usr/bin/loffice
+	dosym "${progdir}"/program/soffice /usr/bin/soffice
+	for prog in base impress calc math writer draw; do
+		dosym "${progdir}"/program/s"${prog}" /usr/bin/lo"${prog}"
+	done
 
 	rm ./usr/share/applications/*
 	mkdir -p "${ED}"/usr/share/applications
 	for prog in base impress startcenter calc math writer draw xsltfilter; do
-		cp "${progdir}"/share/xdg/"${prog}".desktop "${ED}"/usr/share/applications/libreoffice"${MY_PV2}"-"${prog}".desktop
+		cp "${ED}"/"${progdir}"/share/xdg/"${prog}".desktop "${ED}"/usr/share/applications/libreoffice"${MY_PV2}"-"${prog}".desktop
 	done
 
 	doins -r usr
@@ -70,4 +75,11 @@ src_install() {
 pkg_postinst() {
 	pax-mark -m "${EPREFIX}"/usr/$(get_libdir)/libreoffice/program/soffice.bin
 	pax-mark -m "${EPREFIX}"/usr/$(get_libdir)/libreoffice/program/unopkg.bin
+	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
+}
+
+pkg_postrm() {
+	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
 }

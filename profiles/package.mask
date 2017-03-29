@@ -1,5 +1,5 @@
 # This is official RPM version of LibreOffice. This is different
-# from libreoffice-bin version provided bygentoo.
+# from libreoffice-bin version provided by Gentoo.
 app-office/libreoffice-bin
 app-office/libreoffice-l10n
 

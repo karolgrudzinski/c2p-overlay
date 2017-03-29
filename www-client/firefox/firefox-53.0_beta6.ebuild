@@ -24,7 +24,7 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-52.0-patches-07"
+PATCH="${PN}-52.0-patches-08"
 MOZ_HTTP_URI="https://archive.mozilla.org/pub/${PN}/releases"
 
 MOZCONFIG_OPTIONAL_GTK2ONLY=1
@@ -126,17 +126,16 @@ src_prepare() {
 	eapply "${FILESDIR}"/gcc6-fix-lto-partition-flag-v2.patch
 
 	# Apply our patches
-	rm "${WORKDIR}"/firefox/2003_include_sysmacros_h.patch
-	rm "${WORKDIR}"/firefox/2002_system_graphite2.patch
-
 	rm "${WORKDIR}"/firefox/1001_disable_sdk_install.patch
-	rm "${WORKDIR}"/firefox/1004_dont_hardcode_libc_soname.patch
 	rm "${WORKDIR}"/firefox/1003_drop_build_id.patch
+	rm "${WORKDIR}"/firefox/1004_dont_hardcode_libc_soname.patch
+	rm "${WORKDIR}"/firefox/2002_system_graphite2.patch
+#	rm "${WORKDIR}"/firefox/2003_include_sysmacros_h.patch
 
 	eapply "${WORKDIR}/firefox"
-	eapply "${FILESDIR}"/2003_include_sysmacros_h.patch
-	eapply "${FILESDIR}"/2002_system_graphite2.patch
 	eapply "${FILESDIR}"/1003_drop_build_id.patch
+	eapply "${FILESDIR}"/2002_system_graphite2.patch
+#	eapply "${FILESDIR}"/2003_include_sysmacros_h.patch
 
 	# Enable gnomebreakpad
 	if use debug ; then

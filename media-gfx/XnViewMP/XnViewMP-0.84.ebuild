@@ -1,6 +1,5 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 
@@ -97,7 +96,7 @@ src_install() {
 
 	# Install icon and .desktop for menu entry
 	newicon "${D}"${XNVIEW_HOME}/xnview.png ${PN}.png
-	make_desktop_entry xnview XnviewMP ${PN} "Graphics" || die "desktop file sed failed"
+	make_desktop_entry xnview XnViewMP ${PN} "Graphics" || die "desktop file sed failed"
 }
 
 pkg_postinst(){
