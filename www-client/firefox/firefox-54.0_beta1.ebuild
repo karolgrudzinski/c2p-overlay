@@ -35,12 +35,12 @@ inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6
 DESCRIPTION="Firefox Web Browser"
 HOMEPAGE="http://www.mozilla.com/firefox"
 
-KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linux"
+KEYWORDS="~amd64 ~arm64 ~x86 ~amd64-linux ~x86-linux"
 
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
-IUSE="bindist +gmp-autoupdate hardened hwaccel jack nsplugin pgo rust selinux test"
-RESTRICT="!bindist? ( bindist )"
+IUSE="bindist +gmp-autoupdate hardened hwaccel jack nsplugin pgo selinux test"
+RESTRICT="!bindist? ( bindist ) mirror"
 
 PATCH_URIS=( https://dev.gentoo.org/~{anarchy,axs,polynomial-c}/mozilla/patchsets/${PATCH}.tar.xz )
 SRC_URI="${SRC_URI}
@@ -61,8 +61,10 @@ RDEPEND+="
 "
 
 DEPEND="${RDEPEND}
+	dev-util/cargo
+	|| ( dev-lang/rust
+		dev-lang/rust-bin )
 	pgo? ( >=sys-devel/gcc-4.5 )
-	rust? ( dev-lang/rust )
 	amd64? ( ${ASM_DEPEND} virtual/opengl )
 	x86? ( ${ASM_DEPEND} virtual/opengl )"
 
@@ -103,11 +105,6 @@ pkg_setup() {
 		ewarn "You will do a double build for profile guided optimization."
 		ewarn "This will result in your build taking at least twice as long as before."
 	fi
-
-	if use rust; then
-		einfo
-		ewarn "This is very experimental, should only be used by those developing firefox."
-	fi
 }
 
 pkg_pretend() {
@@ -130,9 +127,19 @@ src_unpack() {
 src_prepare() {
 	eapply "${FILESDIR}"/gcc6-fix-lto-partition-flag-v2.patch
 
+	rm "${WORKDIR}"/firefox/1002_add_gentoo_preferences.patch
+	rm "${WORKDIR}"/firefox/2001_system_harfbuzz.patch
+	rm "${WORKDIR}"/firefox/2002_system_graphite2.patch
+	rm "${WORKDIR}"/firefox/6000_only_attempt_to_use_getcontext_on_glibc.patch
+
 	# Apply our patches
 	eapply "${WORKDIR}/firefox"
 	eapply "${FILESDIR}"/musl_drop_hunspell_alloc_hooks.patch
+
+	eapply "${FILESDIR}"/1002_add_gentoo_preferences_54b1.patch
+	eapply "${FILESDIR}"/2001_system_harfbuzz_54b1.patch
+	eapply "${FILESDIR}"/2002_system_graphite2_54b1.patch
+	eapply "${FILESDIR}"/6000_only_attempt_to_use_getcontext_on_glibc_54b1.patch
 
 	# Enable gnomebreakpad
 	if use debug ; then
@@ -225,8 +232,6 @@ src_configure() {
 	mozconfig_annotate '' --with-google-api-keyfile="${S}/google-api-key"
 
 	mozconfig_annotate '' --enable-extensions="${MEXTENSIONS}"
-
-	mozconfig_use_enable rust
 
 	# Allow for a proper pgo build
 	if use pgo; then
