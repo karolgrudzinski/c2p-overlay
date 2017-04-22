@@ -57,6 +57,7 @@ RDEPEND="
 
 # atoms in mozconfig that need to be newer than what is inherited
 RDEPEND+="
+	>=app-text/hunspell-1.5.4
 	>=media-libs/libpng-1.6.28
 "
 

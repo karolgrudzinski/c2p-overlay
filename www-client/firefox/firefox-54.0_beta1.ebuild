@@ -57,9 +57,11 @@ RDEPEND="
 
 # atoms in mozconfig that need to be newer than what is inherited
 RDEPEND+="
+	>=app-text/hunspell-1.5.4
 	>=media-libs/libpng-1.6.28
 "
 
+# Rust became a requirement for building Gecko in February 2017 with Firefox 54
 DEPEND="${RDEPEND}
 	dev-util/cargo
 	|| ( dev-lang/rust
