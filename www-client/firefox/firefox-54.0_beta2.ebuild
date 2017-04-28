@@ -27,10 +27,9 @@ fi
 PATCH="${PN}-53.0-patches-01"
 MOZ_HTTP_URI="https://archive.mozilla.org/pub/${PN}/releases"
 
-MOZCONFIG_OPTIONAL_GTK2ONLY=1
 MOZCONFIG_OPTIONAL_WIFI=1
 
-inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.52 pax-utils fdo-mime autotools virtualx mozlinguas-v2
+inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.53 pax-utils fdo-mime autotools virtualx mozlinguas-v2
 
 DESCRIPTION="Firefox Web Browser"
 HOMEPAGE="http://www.mozilla.com/firefox"
@@ -54,12 +53,6 @@ RDEPEND="
 	>=dev-libs/nss-3.29.5
 	>=dev-libs/nspr-4.13.1
 	selinux? ( sec-policy/selinux-mozilla )"
-
-# atoms in mozconfig that need to be newer than what is inherited
-RDEPEND+="
-	>=app-text/hunspell-1.5.4
-	>=media-libs/libpng-1.6.28
-"
 
 # Rust became a requirement for building Gecko in February 2017 with Firefox 54
 DEPEND="${RDEPEND}
