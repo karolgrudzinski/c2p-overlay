@@ -24,23 +24,22 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-53.0-patches-01"
+PATCH="${PN}-53.0-patches-02"
 MOZ_HTTP_URI="https://archive.mozilla.org/pub/${PN}/releases"
 
-MOZCONFIG_OPTIONAL_GTK2ONLY=1
 MOZCONFIG_OPTIONAL_WIFI=1
 
-inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.52 pax-utils fdo-mime autotools virtualx mozlinguas-v2
+inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.53 pax-utils fdo-mime autotools virtualx mozlinguas-v2
 
 DESCRIPTION="Firefox Web Browser"
 HOMEPAGE="http://www.mozilla.com/firefox"
 
-KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linux"
+KEYWORDS="~amd64 ~arm64 ~x86 ~amd64-linux ~x86-linux"
 
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
-IUSE="bindist +gmp-autoupdate hardened hwaccel jack nsplugin pgo rust selinux test"
-RESTRICT="!bindist? ( bindist )"
+IUSE="bindist +gmp-autoupdate hardened hwaccel jack nsplugin pgo selinux test"
+RESTRICT="!bindist? ( bindist ) mirror"
 
 PATCH_URIS=( https://dev.gentoo.org/~{anarchy,axs,polynomial-c}/mozilla/patchsets/${PATCH}.tar.xz )
 SRC_URI="${SRC_URI}
@@ -55,14 +54,12 @@ RDEPEND="
 	>=dev-libs/nspr-4.13.1
 	selinux? ( sec-policy/selinux-mozilla )"
 
-# atoms in mozconfig that need to be newer than what is inherited
-RDEPEND+="
-	>=media-libs/libpng-1.6.28
-"
-
+# Rust became a requirement for building Gecko in February 2017 with Firefox 54
 DEPEND="${RDEPEND}
+	dev-util/cargo
+	|| ( dev-lang/rust
+		dev-lang/rust-bin )
 	pgo? ( >=sys-devel/gcc-4.5 )
-	rust? ( dev-lang/rust )
 	amd64? ( ${ASM_DEPEND} virtual/opengl )
 	x86? ( ${ASM_DEPEND} virtual/opengl )"
 
@@ -103,11 +100,6 @@ pkg_setup() {
 		ewarn "You will do a double build for profile guided optimization."
 		ewarn "This will result in your build taking at least twice as long as before."
 	fi
-
-	if use rust; then
-		einfo
-		ewarn "This is very experimental, should only be used by those developing firefox."
-	fi
 }
 
 pkg_pretend() {
@@ -130,9 +122,21 @@ src_unpack() {
 src_prepare() {
 	eapply "${FILESDIR}"/gcc6-fix-lto-partition-flag-v2.patch
 
+	rm "${WORKDIR}"/firefox/1002_add_gentoo_preferences.patch
+	rm "${WORKDIR}"/firefox/2001_system_harfbuzz.patch
+	rm "${WORKDIR}"/firefox/2002_system_graphite2.patch
+	rm "${WORKDIR}"/firefox/2003_musl_fix_gettid_inclusion.patch
+	rm "${WORKDIR}"/firefox/6000_only_attempt_to_use_getcontext_on_glibc.patch
+
 	# Apply our patches
 	eapply "${WORKDIR}/firefox"
 	eapply "${FILESDIR}"/musl_drop_hunspell_alloc_hooks.patch
+
+	eapply "${FILESDIR}"/1002_add_gentoo_preferences_54b1.patch
+	eapply "${FILESDIR}"/2001_system_harfbuzz_54b1.patch
+	eapply "${FILESDIR}"/2002_system_graphite2_54b1.patch
+	eapply "${FILESDIR}"/2003_musl_fix_gettid_inclusion_54beta.patch 
+	eapply "${FILESDIR}"/6000_only_attempt_to_use_getcontext_on_glibc_54b1.patch
 
 	# Enable gnomebreakpad
 	if use debug ; then
@@ -225,8 +229,6 @@ src_configure() {
 	mozconfig_annotate '' --with-google-api-keyfile="${S}/google-api-key"
 
 	mozconfig_annotate '' --enable-extensions="${MEXTENSIONS}"
-
-	mozconfig_use_enable rust
 
 	# Allow for a proper pgo build
 	if use pgo; then
@@ -379,15 +381,15 @@ pkg_preinst() {
 
 	# if the apulse libs are available in MOZILLA_FIVE_HOME then apulse
 	# doesn't need to be forced into the LD_LIBRARY_PATH
-	if use pulseaudio && [ -d "${EPREFIX}"/usr/$(get_libdir)/apulse ] ; then
+	if use pulseaudio && has_version ">=media-sound/apulse-0.1.9" ; then
 		einfo "APULSE found - Generating library symlinks for sound support"
 		local lib
 		pushd "${ED}"${MOZILLA_FIVE_HOME} &>/dev/null || die
-		for lib in "${EPREFIX}"/usr/$(get_libdir)/apulse/libpulse* ; do
+		for lib in ../apulse/libpulse{.so{,.0},-simple.so{,.0}} ; do
 			# a quickpkg rolled by hand will grab symlinks as part of the package,
 			# so we need to avoid creating them if they already exist.
 			if ! [ -L ${lib##*/} ]; then
-				ln -s "${lib}" || die
+				ln -s "${lib}" ${lib##*/} || die
 			fi
 		done
 		popd &>/dev/null || die
@@ -406,7 +408,7 @@ pkg_postinst() {
 		for plugin in "${GMP_PLUGIN_LIST[@]}"; do elog "\t ${plugin}" ; done
 	fi
 
-	if use pulseaudio && [ -d "${EPREFIX}"/usr/$(get_libdir)/apulse ]; then
+	if use pulseaudio && has_version ">=media-sound/apulse-0.1.9"; then
 		elog "Apulse was detected at merge time on this system and so it will always be"
 		elog "used for sound.  If you wish to use pulseaudio instead please unmerge"
 		elog "media-sound/apulse."
