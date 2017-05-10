@@ -135,7 +135,7 @@ src_prepare() {
 	eapply "${FILESDIR}"/1002_add_gentoo_preferences_54b1.patch
 	eapply "${FILESDIR}"/2001_system_harfbuzz_54b1.patch
 	eapply "${FILESDIR}"/2002_system_graphite2_54b1.patch
-	eapply "${FILESDIR}"/2003_musl_fix_gettid_inclusion_54beta.patch 
+	eapply "${FILESDIR}"/2003_musl_fix_gettid_inclusion_54beta.patch
 	eapply "${FILESDIR}"/6000_only_attempt_to_use_getcontext_on_glibc_54b1.patch
 
 	# Enable gnomebreakpad
