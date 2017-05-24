@@ -167,6 +167,9 @@ src_prepare() {
 			eapply "${FILESDIR}"/kernel-4.10.patch
 			eapply "${FILESDIR}"/nvidia-uvm-kernel-4.10.patch
 		fi
+		if kernel_is ge 4 10 1 ; then
+			eapply "${FILESDIR}"/nvidia-uvm-kernel-4.11.patch
+		fi
 		# If greater than 2.6.5 use M= instead of SUBDIR=
 #		convert_to_m "${NV_SRC}"/Makefile.kbuild
 	fi
@@ -193,7 +196,7 @@ src_compile() {
 		MAKE="$(get_bmake)" CFLAGS="-Wno-sign-compare" emake CC="$(tc-getCC)" \
 			LD="$(tc-getLD)" LDFLAGS="$(raw-ldflags)" || die
 	elif use kernel_linux; then
-		use uvm && MAKEOPTS=-j1
+#		use uvm && MAKEOPTS=-j1
 		linux-mod_src_compile
 	fi
 
