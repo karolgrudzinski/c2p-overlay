@@ -1,0 +1,20 @@
+diff -Naur firefox-54.0b11.orig/build/autoconf/compiler-opts.m4 firefox-54.0b11/build/autoconf/compiler-opts.m4
+--- firefox-54.0b11.orig/build/autoconf/compiler-opts.m4	2017-05-25 19:55:28.000000000 +0200
++++ firefox-54.0b11/build/autoconf/compiler-opts.m4	2017-05-26 16:45:23.828739694 +0200
+@@ -270,6 +270,8 @@
+ 
+ if test "$GNU_CC" -a -n "$MOZ_PIE"; then
+     AC_MSG_CHECKING([for PIE support])
++    _SAVE_CFLAGS=$CFLAGS
++    CFLAGS="$CFLAGS -fPIC"
+     _SAVE_LDFLAGS=$LDFLAGS
+     LDFLAGS="$LDFLAGS $DSO_PIC_CFLAGS -pie"
+     AC_TRY_LINK(,,AC_MSG_RESULT([yes])
+@@ -277,6 +279,7 @@
+                   AC_MSG_RESULT([no])
+                   AC_MSG_ERROR([--enable-pie requires PIE support from the linker.]))
+     LDFLAGS=$_SAVE_LDFLAGS
++    CFLAGS=$_SAVE_CFLAGS
+ fi
+ 
+ AC_SUBST(MOZ_PROGRAM_LDFLAGS)
