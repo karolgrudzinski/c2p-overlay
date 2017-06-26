@@ -117,6 +117,8 @@ src_unpack() {
 }
 
 src_prepare() {
+	eapply "${FILESDIR}"/gcc6-fix-lto-partition-flag-v2.patch
+
 	# Apply our patches
 	eapply "${WORKDIR}/firefox"
 
