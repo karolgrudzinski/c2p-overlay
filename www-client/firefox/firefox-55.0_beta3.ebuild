@@ -24,27 +24,22 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-53.0-patches-02"
+PATCH="${PN}-55.0-patches-02"
 MOZ_HTTP_URI="https://archive.mozilla.org/pub/${PN}/releases"
 
 MOZCONFIG_OPTIONAL_WIFI=1
 
-inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.53 pax-utils fdo-mime autotools virtualx mozlinguas-v2
+inherit check-reqs flag-o-matic toolchain-funcs eutils gnome2-utils mozconfig-v6.55 pax-utils fdo-mime autotools virtualx mozlinguas-v2
 
 DESCRIPTION="Firefox Web Browser"
 HOMEPAGE="http://www.mozilla.com/firefox"
 
-# Firefox works on numerous architectures:
-#KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linux"
-# Rust works on that architectures https://forge.rust-lang.org/platform-support.html
-#KEYWORDS="~amd64 ~arm ~arm64 ~x86 ~ppc ~ppc64 ~amd64-linux ~x86-linux"
-# But Rust in Gentoo works only on this:
-KEYWORDS="~amd64 ~x86 ~amd64-linux ~x86-linux"
+KEYWORDS="~amd64 ~x86"
 
 SLOT="0"
 LICENSE="MPL-2.0 GPL-2 LGPL-2.1"
 IUSE="bindist +gmp-autoupdate hardened hwaccel jack nsplugin pgo selinux test"
-RESTRICT="!bindist? ( bindist ) mirror"
+RESTRICT="!bindist? ( bindist )"
 
 PATCH_URIS=( https://dev.gentoo.org/~{anarchy,axs,polynomial-c}/mozilla/patchsets/${PATCH}.tar.xz )
 SRC_URI="${SRC_URI}
@@ -55,16 +50,13 @@ ASM_DEPEND=">=dev-lang/yasm-1.1"
 
 RDEPEND="
 	jack? ( virtual/jack )
-	>=dev-libs/nss-3.29.5
-	>=dev-libs/nspr-4.13.1
+	>=dev-libs/nss-3.31
+	>=dev-libs/nspr-4.15
 	selinux? ( sec-policy/selinux-mozilla )"
 
-# Rust became a requirement for building Gecko in February 2017 with Firefox 54
 DEPEND="${RDEPEND}
-	dev-util/cargo
-	|| ( dev-lang/rust
-		dev-lang/rust-bin )
 	pgo? ( >=sys-devel/gcc-4.5 )
+	>=dev-lang/rust-1.15.1
 	amd64? ( ${ASM_DEPEND} virtual/opengl )
 	x86? ( ${ASM_DEPEND} virtual/opengl )"
 
@@ -125,25 +117,8 @@ src_unpack() {
 }
 
 src_prepare() {
-	eapply "${FILESDIR}"/gcc6-fix-lto-partition-flag-v2.patch
-
-	rm "${WORKDIR}"/firefox/1002_add_gentoo_preferences.patch
-	rm "${WORKDIR}"/firefox/1006_fix_hardened_pie_detection.patch
-	rm "${WORKDIR}"/firefox/2001_system_harfbuzz.patch
-	rm "${WORKDIR}"/firefox/2002_system_graphite2.patch
-	rm "${WORKDIR}"/firefox/2003_musl_fix_gettid_inclusion.patch
-	rm "${WORKDIR}"/firefox/6000_only_attempt_to_use_getcontext_on_glibc.patch
-
 	# Apply our patches
 	eapply "${WORKDIR}/firefox"
-	eapply "${FILESDIR}"/musl_drop_hunspell_alloc_hooks.patch
-
-	eapply "${FILESDIR}"/1002_add_gentoo_preferences_54b1.patch
-	eapply "${FILESDIR}"/1006_fix_hardened_pie_detection_54b11.patch
-	eapply "${FILESDIR}"/2001_system_harfbuzz_54b1.patch
-	eapply "${FILESDIR}"/2002_system_graphite2_54b1.patch
-	eapply "${FILESDIR}"/2003_musl_fix_gettid_inclusion_54beta.patch
-	eapply "${FILESDIR}"/6000_only_attempt_to_use_getcontext_on_glibc_54b1.patch
 
 	# Enable gnomebreakpad
 	if use debug ; then
@@ -197,10 +172,6 @@ src_prepare() {
 	# Must run autoconf in js/src
 	cd "${S}"/js/src || die
 	eautoconf old-configure.in
-
-	# Need to update jemalloc's configure
-	cd "${S}"/memory/jemalloc/src || die
-	WANT_AUTOCONF= eautoconf
 }
 
 src_configure() {
@@ -247,10 +218,6 @@ src_configure() {
 
 	# Finalize and report settings
 	mozconfig_final
-
-	if [[ $(gcc-major-version) -lt 4 ]]; then
-		append-cxxflags -fno-stack-protector
-	fi
 
 	# workaround for funky/broken upstream configure...
 	SHELL="${SHELL:-${EPREFIX}/bin/bash}" \
