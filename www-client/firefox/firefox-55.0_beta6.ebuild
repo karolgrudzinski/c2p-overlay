@@ -7,11 +7,11 @@ WANT_AUTOCONF="2.1"
 MOZ_ESR=""
 
 # This list can be updated with scripts/get_langs.sh from the mozilla overlay
-MOZ_LANGS=( ach af an ar as ast az be bg bn-BD bn-IN br bs ca cak cs cy da de dsb 
-el en en-GB en-US en-ZA eo es-AR es-CL es-ES es-MX et eu fa ff fi fr fy-NL ga-IE 
-gd gl gn gu-IN he hi-IN hr hsb hu hy-AM id is it ja ka kab kk km kn ko lij lt lv 
-mai mk ml mr ms my nb-NO nl nn-NO or pa-IN pl pt-BR pt-PT rm ro ru si sk sl son 
-sq sr sv-SE ta te th tr uk ur uz vi xh zh-CN zh-TW )
+MOZ_LANGS=( ach af an ar as ast az be bg bn-BD bn-IN br bs ca cak cs cy da de
+dsb el en en-GB en-US en-ZA eo es-AR es-CL es-ES es-MX et eu fa ff fi fr fy-NL
+ga-IE gd gl gn gu-IN he hi-IN hr hsb hu hy-AM id is it ja ka kab kk km kn ko
+lij lt lv mai mk ml mr ms my nb-NO nl nn-NO or pa-IN pl pt-BR pt-PT rm ro ru si
+sk sl son sq sr sv-SE ta te th tr uk ur uz vi xh zh-CN zh-TW )
 
 # Convert the ebuild version to the upstream mozilla version, used by mozlinguas
 MOZ_PV="${PV/_alpha/a}" # Handle alpha for SRC_URI
@@ -24,7 +24,7 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 
 # Patch version
-PATCH="${PN}-55.0-patches-02"
+PATCH="${PN}-55.0-patches-04"
 MOZ_HTTP_URI="https://archive.mozilla.org/pub/${PN}/releases"
 
 MOZCONFIG_OPTIONAL_WIFI=1
