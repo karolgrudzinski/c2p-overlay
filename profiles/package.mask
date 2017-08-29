@@ -5,3 +5,7 @@ app-office/libreoffice-l10n
 
 # Version from this overlay doesn't check java support in LibreOffice
 app-officeext/languagetool
+
+
+# Needs icu 59.1
+=www-client/firefox-56.0_beta7
