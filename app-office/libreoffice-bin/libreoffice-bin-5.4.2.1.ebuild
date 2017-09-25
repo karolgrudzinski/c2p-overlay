@@ -81,12 +81,12 @@ pkg_postinst() {
 	pax-mark -m "${EPREFIX}"/usr/$(get_libdir)/libreoffice/program/soffice.bin
 	pax-mark -m "${EPREFIX}"/usr/$(get_libdir)/libreoffice/program/unopkg.bin
 	xdg_desktop_database_update
-	xdg_mime_database_update
+	xdg_mimeinfo_database_update
 	gnome2_icon_cache_update
 }
 
 pkg_postrm() {
 	xdg_desktop_database_update
-	xdg_mime_database_update
+	xdg_mimeinfo_database_update
 	gnome2_icon_cache_update
 }
