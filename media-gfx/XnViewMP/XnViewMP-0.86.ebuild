@@ -65,6 +65,7 @@ RDEPEND=">=dev-libs/glib-2
 	x11-libs/libX11
 	x11-libs/libXi
 	x11-libs/libXt
+	!=media-libs/fontconfig-2.12.6
 	!bundled-libs? ( ${BUNDLED_LIBS_DEPEND} )
 	"
 DEPEND=""
