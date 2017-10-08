@@ -3,7 +3,7 @@
 
 EAPI=6
 
-inherit eutils fdo-mime
+inherit eutils xdg-utils
 
 DESCRIPTION="XnView MP image viewer/converter"
 HOMEPAGE="http://www.xnview.com/"
