@@ -3,7 +3,7 @@
 
 EAPI=6
 
-inherit rpm eutils multilib versionator
+inherit rpm versionator
 
 MY_PV=$(get_version_component_range 1-3)
 
@@ -14,7 +14,7 @@ BASE_SRC_URI_STABLE="http://download.documentfoundation.org/${PN/-l10n/}/stable/
 
 LICENSE="|| ( LGPL-3 MPL-1.1 )"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~x86 ~amd64-linux ~x86-linux"
+KEYWORDS="~amd64 ~arm ~arm64 ~x86 ~amd64-linux ~x86-linux"
 IUSE="offlinehelp"
 
 #
