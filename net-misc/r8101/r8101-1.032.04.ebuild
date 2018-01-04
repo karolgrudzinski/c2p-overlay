@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -31,13 +31,13 @@ src_prepare() {
 	if kernel_is ge 4 0; then
 		eapply "${FILESDIR}"/r8101-linux-4.0-compat.patch
 	fi
-# 	if kernel_is ge 4 7; then
-# 		epatch "${FILESDIR}"/r8101-linux-4.7-compat1.patch
-# 		epatch "${FILESDIR}"/r8101-linux-4.7-compat2.patch
-# 	fi
-	if kernel_is ge 4 11; then
-		eapply "${FILESDIR}"/r8101-linux-4.11-compat.patch
-	fi
+#	if kernel_is ge 4 7; then
+#		epatch "${FILESDIR}"/r8101-linux-4.7-compat1.patch
+#		epatch "${FILESDIR}"/r8101-linux-4.7-compat2.patch
+#	fi
+#	if kernel_is ge 4 11; then
+#		eapply "${FILESDIR}"/r8101-linux-4.11-compat.patch
+#	fi
 
 	eapply_user
 }
