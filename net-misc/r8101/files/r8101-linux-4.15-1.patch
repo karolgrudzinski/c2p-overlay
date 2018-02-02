@@ -1,0 +1,92 @@
+diff -Naur r8101-1.032.04.orig/src/r8101_n.c r8101-1.032.04/src/r8101_n.c
+--- r8101-1.032.04.orig/src/r8101_n.c	2018-02-02 12:56:23.676349799 +0100
++++ r8101-1.032.04/src/r8101_n.c	2018-02-02 12:58:10.463354967 +0100
+@@ -211,8 +211,11 @@
+ 
+ static void rtl8101_dsm(struct net_device *dev, int dev_state);
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)
++static void rtl8101_esd_timer(struct timer_list *timer);
++#else
+ static void rtl8101_esd_timer(unsigned long __opaque);
+-
++#endif//LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)
+ static void rtl8101_hw_phy_config(struct net_device *dev);
+ 
+ static void rtl8101_wait_for_quiescence(struct net_device *dev);
+@@ -220,7 +223,11 @@
+ static void rtl8101_tx_clear(struct rtl8101_private *tp);
+ static void rtl8101_rx_clear(struct rtl8101_private *tp);
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)
++static void rtl8101_link_timer(struct timer_list *timer);
++#else
+ static void rtl8101_link_timer(unsigned long __opaque);
++#endif//LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)
+ static void rtl8101_aspm_fix1(struct net_device *dev);
+ 
+ static int rtl8101_open(struct net_device *dev);
+@@ -9136,7 +9143,11 @@
+         struct rtl8101_private *tp = netdev_priv(dev);
+         struct timer_list *timer = &tp->link_timer;
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)
++        timer_setup(timer, rtl8101_link_timer, 0);
++#else
+         setup_timer(timer, rtl8101_link_timer, (unsigned long)dev);
++#endif//LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)        
+         mod_timer(timer, jiffies + RTL8101_LINK_TIMEOUT);
+ }
+ 
+@@ -9150,7 +9161,11 @@
+         struct rtl8101_private *tp = netdev_priv(dev);
+         struct timer_list *timer = &tp->esd_timer;
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)
++        timer_setup(timer, rtl8101_esd_timer, 0);
++#else
+         setup_timer(timer, rtl8101_esd_timer, (unsigned long)dev);
++#endif//LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)        
+         mod_timer(timer, jiffies + RTL8101_ESD_TIMEOUT);
+ }
+ 
+@@ -10489,12 +10504,19 @@
+ }
+ 
+ static void
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)
++rtl8101_esd_timer(struct timer_list *timer)
++{
++        struct rtl8101_private *tp = from_timer(tp, timer, esd_timer);
++        struct net_device *dev = tp->dev;
++#else
+ rtl8101_esd_timer(unsigned long __opaque)
+ {
+         struct net_device *dev = (struct net_device *)__opaque;
+         struct rtl8101_private *tp = netdev_priv(dev);
+-        struct pci_dev *pdev = tp->pci_dev;
+         struct timer_list *timer = &tp->esd_timer;
++#endif//LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)
++        struct pci_dev *pdev = tp->pci_dev;
+         unsigned long timeout = RTL8101_ESD_TIMEOUT;
+         unsigned long flags;
+         u8 cmd;
+@@ -10600,11 +10622,18 @@
+ }
+ 
+ static void
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)
++rtl8101_link_timer(struct timer_list *timer)
++{
++        struct rtl8101_private *tp = from_timer(tp, timer, link_timer);
++        struct net_device *dev = tp->dev;
++#else
+ rtl8101_link_timer(unsigned long __opaque)
+ {
+         struct net_device *dev = (struct net_device *)__opaque;
+         struct rtl8101_private *tp = netdev_priv(dev);
+         struct timer_list *timer = &tp->link_timer;
++#endif//LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0)
+         unsigned long flags;
+ 
+         spin_lock_irqsave(&tp->lock, flags);
