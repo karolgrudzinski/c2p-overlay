@@ -59,6 +59,12 @@ esac
 # The http URI prefix for the release tarballs and language packs.
 : ${MOZ_HTTP_URI:=""}
 
+# @ECLASS-VARIABLE: MOZ_LANGPACK_HTTP_URI
+# @DESCRIPTION:
+# An alternative http URI if it differs from official mozilla URI.
+# Defaults to whatever MOZ_HTTP_URI was set to.
+: ${MOZ_LANGPACK_HTTP_URI:=${MOZ_HTTP_URI}}
+
 # @ECLASS-VARIABLE: MOZ_LANGPACK_PREFIX
 # @DESCRIPTION:
 # The relative path till the lang code in the langpack file URI.
@@ -128,7 +134,7 @@ MOZ_TOO_REGIONALIZED_FOR_L10N=( fy-NL ga-IE gu-IN hi-IN hy-AM nb-NO nn-NO pa-IN 
 # No language packs for alphas and betas
 if ! [[ -n ${MOZ_GENERATE_LANGPACKS} ]] ; then
 	if ! [[ ${PV} =~ alpha ]] || { [[ ${PN} == seamonkey ]] && ! [[ ${PV} =~ alpha ]] ; } || [[ -n ${MOZ_FORCE_UPSTREAM_L10N} ]] ; then
-	[[ -z ${MOZ_FTP_URI} ]] && [[ -z ${MOZ_HTTP_URI} ]] && die "No URI set to download langpacks, please set one of MOZ_{FTP,HTTP}_URI"
+	[[ -z ${MOZ_FTP_URI} ]] && [[ -z ${MOZ_LANGPACK_HTTP_URI} ]] && die "No URI set to download langpacks, please set one of MOZ_{FTP,HTTP_LANGPACK}_URI"
 	for x in "${MOZ_LANGS[@]}" ; do
 		# en and en_US are handled internally
 		if [[ ${x} == en ]] || [[ ${x} == en-US ]]; then
@@ -143,8 +149,8 @@ if ! [[ -n ${MOZ_GENERATE_LANGPACKS} ]] ; then
 		SRC_URI+=" l10n_${xflag/[_@]/-}? ("
 		[[ -n ${MOZ_FTP_URI} ]] && SRC_URI+="
 			${MOZ_FTP_URI}/${MOZ_LANGPACK_PREFIX}${x}${MOZ_LANGPACK_SUFFIX} -> ${MOZ_P}-${x}${MOZ_LANGPACK_UNOFFICIAL:+.unofficial}.xpi"
-		[[ -n ${MOZ_HTTP_URI} ]] && SRC_URI+="
-			${MOZ_HTTP_URI}/${MOZ_LANGPACK_PREFIX}${x}${MOZ_LANGPACK_SUFFIX} -> ${MOZ_P}-${x}${MOZ_LANGPACK_UNOFFICIAL:+.unofficial}.xpi"
+		[[ -n ${MOZ_LANGPACK_HTTP_URI} ]] && SRC_URI+="
+			${MOZ_LANGPACK_HTTP_URI}/${MOZ_LANGPACK_PREFIX}${x}${MOZ_LANGPACK_SUFFIX} -> ${MOZ_P}-${x}${MOZ_LANGPACK_UNOFFICIAL:+.unofficial}.xpi"
 		SRC_URI+=" )"
 		IUSE+=" l10n_${xflag/[_@]/-}"
 		# We used to do some magic if specific/generic locales were missing, but
@@ -222,7 +228,7 @@ mozlinguas_export() {
 		else
 			:
 		fi
-		ewarn "Sorry, but ${P} does not support the ${lingua} locale"
+		einfo "Sorry, but ${P} does not support the ${lingua} locale in LINGUAS"
 	done
 }
 
@@ -330,18 +336,6 @@ mozlinguas_xpistage_langpacks() {
 			cp -RLp -t "${modpath}/chrome" "${srcprefix}-${l}/chrome/${c}-${l}" || die
 			grep "locale ${c} ${l} chrome/" "${srcprefix}-${l}/chrome.manifest" \
 				>>"${modpath}/chrome.manifest" || die
-		elif [[ -e "${srcprefix}-${l}/chrome/${c}/locale" ]]; then
-			if grep "locale ${c} ${l}" "${srcprefix}-${l}/chrome.manifest" &>/dev/null; then
-				grep "locale ${c} ${l} chrome/" "${srcprefix}-${l}/chrome.manifest" \
-					>>"${modpath}/chrome.manifest" || die
-				cp -RLp -t "${modpath}/chrome" "${srcprefix}-${l}/chrome/${c}" || die
-			elif grep "locale ${c} ${l}" "${srcprefix}-${l}/chrome/${c}.manifest" &>/dev/null ; then
-				grep "locale ${c} ${l}" "${srcprefix}-${l}/chrome/${c}.manifest" \
-					>>"${modpath}/chrome/${c}.manifest" || die
-				cp -RLp -t "${modpath}/chrome" "${srcprefix}-${l}/chrome/${c}" || die
-			else
-				ewarn "Locale ${l} could not be processed for ${c}, skipping."
-			fi
 		elif [[ -e "${srcprefix}/chrome/${c}-${l}" ]]; then
 			cp -RLp -t "${modpath}/chrome" "${srcprefix}/chrome/${c}-${l}" || die
 			grep "locale ${c} ${l} chrome/" "${srcprefix}/chrome.manifest" \
